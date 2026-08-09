@@ -4,8 +4,12 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import type { Catalog, Category, Product } from "./types";
 import { setCatalogSnapshot } from "./catalog-store";
+import { tryGetStore } from "./blob-store";
+import seed from "../../data/catalog.json";
 
 const CATALOG_PATH = path.join(process.cwd(), "data", "catalog.json");
+const STORE_NAME = "catalog";
+const CATALOG_KEY = "catalog";
 
 function isLocalized(value: unknown): boolean {
   if (!value || typeof value !== "object") return false;
@@ -62,24 +66,34 @@ function normalizeCatalog(raw: unknown): Catalog {
 }
 
 export async function readCatalogFile(): Promise<Catalog> {
-  const raw = await fs.readFile(CATALOG_PATH, "utf8");
-  const catalog = normalizeCatalog(JSON.parse(raw));
+  const store = tryGetStore(STORE_NAME);
+
+  // Until an admin saves for the first time there is no blob, so fall back to
+  // the catalogue committed alongside the code.
+  const raw = store
+    ? ((await store.get(CATALOG_KEY, { type: "json" })) ?? seed)
+    : JSON.parse(await fs.readFile(CATALOG_PATH, "utf8"));
+
+  const catalog = normalizeCatalog(raw);
   setCatalogSnapshot(catalog);
   return catalog;
 }
 
 export async function writeCatalogFile(catalog: Catalog): Promise<Catalog> {
   const normalized = normalizeCatalog(catalog);
-  await fs.mkdir(path.dirname(CATALOG_PATH), { recursive: true });
-  await fs.writeFile(
-    CATALOG_PATH,
-    `${JSON.stringify(normalized, null, 2)}\n`,
-    "utf8",
-  );
+  const store = tryGetStore(STORE_NAME);
+
+  if (store) {
+    await store.setJSON(CATALOG_KEY, normalized);
+  } else {
+    await fs.mkdir(path.dirname(CATALOG_PATH), { recursive: true });
+    await fs.writeFile(
+      CATALOG_PATH,
+      `${JSON.stringify(normalized, null, 2)}\n`,
+      "utf8",
+    );
+  }
+
   setCatalogSnapshot(normalized);
   return normalized;
-}
-
-export function catalogPath() {
-  return CATALOG_PATH;
 }

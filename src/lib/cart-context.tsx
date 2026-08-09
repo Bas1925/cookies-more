@@ -11,6 +11,7 @@ import {
 } from "react";
 import type { CartLine, Fulfillment } from "./types";
 import { DELIVERY_FEE, DISCOUNT_CODES, getProduct, boxLinePrice } from "./data";
+import { getLenis } from "./lenis";
 
 // v2: the menu moved from the demo flavors to the real catalogue, so any
 // v1 cart holds product ids that no longer exist.
@@ -123,12 +124,23 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [lines, fulfillment, discountCode, isHydrated]);
 
-  // Lock body scroll while the drawer is open.
+  // Lock body scroll while the drawer is open. Lenis has to be paused too —
+  // it keeps its own scroll loop running, which fights the drawer's own
+  // scroll container and leaves the page drifting behind the overlay.
   useEffect(() => {
     const root = document.documentElement;
-    if (isOpen) root.classList.add("no-scroll");
-    else root.classList.remove("no-scroll");
-    return () => root.classList.remove("no-scroll");
+    const lenis = getLenis();
+    if (isOpen) {
+      root.classList.add("no-scroll");
+      lenis?.stop();
+    } else {
+      root.classList.remove("no-scroll");
+      lenis?.start();
+    }
+    return () => {
+      root.classList.remove("no-scroll");
+      getLenis()?.start();
+    };
   }, [isOpen]);
 
   const openCart = useCallback(() => setIsOpen(true), []);

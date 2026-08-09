@@ -123,6 +123,10 @@ export default function CartDrawer() {
   return (
     <div
       dir="ltr"
+      // Lenis hijacks wheel/touch on the document. Without this the drawer
+      // cannot scroll at all: Lenis swallows the gesture and forwards it to
+      // the page, which is scroll-locked while the bag is open.
+      data-lenis-prevent
       className={`cart-overlay-scroll fixed inset-0 z-[150] overflow-x-hidden overflow-y-auto overscroll-contain ${
         isOpen ? "" : "pointer-events-none"
       }`}

@@ -2,9 +2,24 @@ import "server-only";
 
 import fs from "node:fs/promises";
 import path from "node:path";
+import { tryGetStore } from "./blob-store";
 import { isOrderStatus, type Order, type OrdersFile, type OrderStatus } from "./types";
 
 const ORDERS_PATH = path.join(process.cwd(), "data", "orders.json");
+const STORE_NAME = "orders";
+
+function isOrder(item: unknown): item is Order {
+  return (
+    Boolean(item) &&
+    typeof item === "object" &&
+    typeof (item as Order).id === "string" &&
+    typeof (item as Order).total === "number"
+  );
+}
+
+function withStatus(order: Order): Order {
+  return { ...order, status: isOrderStatus(order.status) ? order.status : "placed" };
+}
 
 function normalizeOrders(raw: unknown): OrdersFile {
   if (!raw || typeof raw !== "object") {
@@ -14,22 +29,21 @@ function normalizeOrders(raw: unknown): OrdersFile {
   if (!Array.isArray(data.orders)) {
     return { orders: [] };
   }
-  const orders = data.orders
-    .filter(
-      (item): item is Order =>
-      Boolean(item) &&
-      typeof item === "object" &&
-      typeof (item as Order).id === "string" &&
-      typeof (item as Order).total === "number",
-    )
-    .map((order) => ({
-      ...order,
-      status: isOrderStatus(order.status) ? order.status : "placed",
-    }));
-  return { orders };
+  return { orders: data.orders.filter(isOrder).map(withStatus) };
 }
 
-export async function readOrdersFile(): Promise<OrdersFile> {
+function newestFirst(orders: Order[]): Order[] {
+  return [...orders].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
+}
+
+/* ---------------------------------------------------------------- *
+ * Filesystem fallback — local dev only. On Netlify the filesystem is
+ * read-only, which is why the blob paths below exist at all.
+ * ---------------------------------------------------------------- */
+
+async function readOrdersFromDisk(): Promise<OrdersFile> {
   try {
     const raw = await fs.readFile(ORDERS_PATH, "utf8");
     return normalizeOrders(JSON.parse(raw));
@@ -41,7 +55,7 @@ export async function readOrdersFile(): Promise<OrdersFile> {
   }
 }
 
-export async function writeOrdersFile(file: OrdersFile): Promise<OrdersFile> {
+async function writeOrdersToDisk(file: OrdersFile): Promise<OrdersFile> {
   const normalized = normalizeOrders(file);
   await fs.mkdir(path.dirname(ORDERS_PATH), { recursive: true });
   await fs.writeFile(
@@ -52,10 +66,38 @@ export async function writeOrdersFile(file: OrdersFile): Promise<OrdersFile> {
   return normalized;
 }
 
+/* ---------------------------------------------------------------- *
+ * Public API — blob-backed on Netlify, disk-backed locally.
+ *
+ * Each order is its own blob keyed by order id. Storing them in one
+ * shared JSON document would mean read-modify-write on every checkout,
+ * so two customers ordering at the same moment would silently drop one
+ * of the orders.
+ * ---------------------------------------------------------------- */
+
+export async function readOrdersFile(): Promise<OrdersFile> {
+  const store = tryGetStore(STORE_NAME);
+  if (!store) return readOrdersFromDisk();
+
+  const { blobs } = await store.list();
+  const loaded = await Promise.all(
+    blobs.map((blob) =>
+      store.get(blob.key, { type: "json" }).catch(() => null),
+    ),
+  );
+  return { orders: newestFirst(loaded.filter(isOrder).map(withStatus)) };
+}
+
 export async function appendOrder(order: Order): Promise<Order> {
-  const file = await readOrdersFile();
-  file.orders.unshift(order);
-  await writeOrdersFile(file);
+  const store = tryGetStore(STORE_NAME);
+  if (!store) {
+    const file = await readOrdersFromDisk();
+    file.orders.unshift(order);
+    await writeOrdersToDisk(file);
+    return order;
+  }
+
+  await store.setJSON(order.id, order);
   return order;
 }
 
@@ -63,22 +105,42 @@ export async function updateOrderStatus(
   orderId: string,
   status: OrderStatus,
 ): Promise<Order | null> {
-  const file = await readOrdersFile();
-  const order = file.orders.find((item) => item.id === orderId);
-  if (!order) return null;
+  const store = tryGetStore(STORE_NAME);
+  if (!store) {
+    const file = await readOrdersFromDisk();
+    const order = file.orders.find((item) => item.id === orderId);
+    if (!order) return null;
+    order.status = status;
+    order.statusUpdatedAt = new Date().toISOString();
+    await writeOrdersToDisk(file);
+    return order;
+  }
 
-  order.status = status;
-  order.statusUpdatedAt = new Date().toISOString();
-  await writeOrdersFile(file);
+  const existing = await store.get(orderId, { type: "json" });
+  if (!isOrder(existing)) return null;
+
+  const order: Order = {
+    ...withStatus(existing),
+    status,
+    statusUpdatedAt: new Date().toISOString(),
+  };
+  await store.setJSON(orderId, order);
   return order;
 }
 
 export async function deleteOrder(orderId: string): Promise<boolean> {
-  const file = await readOrdersFile();
-  const remainingOrders = file.orders.filter((order) => order.id !== orderId);
-  if (remainingOrders.length === file.orders.length) return false;
+  const store = tryGetStore(STORE_NAME);
+  if (!store) {
+    const file = await readOrdersFromDisk();
+    const remaining = file.orders.filter((order) => order.id !== orderId);
+    if (remaining.length === file.orders.length) return false;
+    await writeOrdersToDisk({ orders: remaining });
+    return true;
+  }
 
-  await writeOrdersFile({ orders: remainingOrders });
+  const existing = await store.get(orderId, { type: "json" });
+  if (!isOrder(existing)) return false;
+  await store.delete(orderId);
   return true;
 }
 

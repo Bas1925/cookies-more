@@ -1,0 +1,941 @@
+{
+  "categories": [
+    {
+      "id": "boxes",
+      "name": {
+        "en": "Boxes",
+        "ar": "صناديق",
+        "he": "קופסאות"
+      },
+      "blurb": {
+        "en": "Ready-made boxes we pack for you. Want to choose every cookie? Build your own below.",
+        "ar": "صناديق جاهزة نجهّزها لك. هل تريد اختيار كل قطعة كوكيز؟ جهّز صندوقك أدناه.",
+        "he": "קופסאות מוכנות שאנחנו מארזים בשבילכם. רוצים לבחור כל עוגייה? בונים קופסה למטה."
+      },
+      "hidden": false
+    },
+    {
+      "id": "cookies",
+      "name": {
+        "en": "Cookies",
+        "ar": "كوكيز",
+        "he": "עוגיות"
+      },
+      "blurb": {
+        "en": "Soft centers, crisp edges, baked in small trays.",
+        "ar": "قلب طري وحواف مقرمشة، تُخبز بكميات صغيرة.",
+        "he": "מרכז רך, שוליים פריכים, נאפות במגשים קטנים."
+      },
+      "hidden": false
+    },
+    {
+      "id": "cakes",
+      "name": {
+        "en": "Cakes",
+        "ar": "كعك",
+        "he": "עוגות"
+      },
+      "blurb": {
+        "en": "Whole cakes, loaves and brownies to order.",
+        "ar": "قوالب كيك كاملة وقوالب صغيرة وبراونيز حسب الطلب.",
+        "he": "עוגות שלמות, אצבעות ובראוניז בהזמנה."
+      },
+      "hidden": false
+    },
+    {
+      "id": "mini-cakes",
+      "name": {
+        "en": "Mini Cakes",
+        "ar": "ميني كعك",
+        "he": "מיני עוגות"
+      },
+      "blurb": {
+        "en": "Single-serve desserts, one perfect portion each.",
+        "ar": "حلويات فردية بحجم مثالي لشخص واحد.",
+        "he": "קינוחים אישיים, מנה מושלמת לכל אחד."
+      },
+      "hidden": false
+    },
+    {
+      "id": "cinnabon",
+      "name": {
+        "en": "Cinnamon Rolls",
+        "ar": "سينابون",
+        "he": "סינבון"
+      },
+      "blurb": {
+        "en": "Warm cinnamon rolls, singly or by the tray.",
+        "ar": "سينابون دافئ، حبة واحدة أو صينية كاملة.",
+        "he": "סינבון חם, ביחידה או במגש שלם."
+      },
+      "hidden": false
+    },
+    {
+      "id": "treats",
+      "name": {
+        "en": "More Treats",
+        "ar": "منوعات أخرى",
+        "he": "פינוקים נוספים"
+      },
+      "blurb": {
+        "en": "Chocolate balls by the box.",
+        "ar": "كرات شوكولاتة في علب.",
+        "he": "כדורי שוקולד בקופסה."
+      },
+      "hidden": false
+    }
+  ],
+  "products": [
+    {
+      "image": "/menu/box-small.jpeg",
+      "id": "box-small",
+      "category": "boxes",
+      "name": {
+        "en": "Small Box",
+        "ar": "صندوق صغير",
+        "he": "קופסה קטנה"
+      },
+      "price": 80,
+      "tagline": {
+        "en": "Ready-made small box",
+        "ar": "صندوق جاهز صغير",
+        "he": "קופסה קטנה מוכנה"
+      },
+      "description": {
+        "en": "A ready-made box we pack for you — no picking needed. Perfect as a little gift.",
+        "ar": "صندوق جاهز نجهّزه لكم — بدون اختيار. مثالي كهدية صغيرة.",
+        "he": "קופסה מוכנה שאנחנו מארזים בשבילכם — בלי לבחור. מושלמת למתנה קטנה."
+      },
+      "accent": "#a3714a",
+      "hidden": false
+    },
+    {
+      "image": "/menu/box-medium.jpeg",
+      "id": "box-medium",
+      "category": "boxes",
+      "name": {
+        "en": "Medium Box",
+        "ar": "صندوق متوسط",
+        "he": "קופסה בינונית"
+      },
+      "price": 100,
+      "tagline": {
+        "en": "Ready-made medium box",
+        "ar": "صندوق جاهز متوسط",
+        "he": "קופסה בינונית מוכנה"
+      },
+      "description": {
+        "en": "A ready-made assortment we build in the kitchen — enough to share around the table.",
+        "ar": "تشكيلة جاهزة نبنيها في المطبخ — تكفي للمشاركة حول الطاولة.",
+        "he": "מבחר מוכן שאנחנו מרכיבים במטבח — מספיק לחלוק סביב השולחן."
+      },
+      "accent": "#8a5a3a",
+      "hidden": false
+    },
+    {
+      "image": "/menu/box-large.jpeg",
+      "id": "box-large",
+      "category": "boxes",
+      "name": {
+        "en": "Celebration Box",
+        "ar": "صندوق الاحتفال",
+        "he": "קופסת חגיגה"
+      },
+      "price": 130,
+      "tagline": {
+        "en": "Our large ready mix",
+        "ar": "تشكيلتنا الكبيرة الجاهزة",
+        "he": "המיקס הגדול המוכן שלנו"
+      },
+      "description": {
+        "en": "The full ready-made spread — packed by us for parties, offices, and big thank-yous.",
+        "ar": "التشكيلة الكاملة الجاهزة — نجهّزها للحفلات والمكاتب والهدايا الكبيرة.",
+        "he": "המבחר המלא המוכן — ארוז אצלנו למסיבות, משרדים ותודות גדולות."
+      },
+      "accent": "#7a4a2e",
+      "hidden": false
+    },
+    {
+      "image": "/menu/build-box-small.png",
+      "id": "build-box-small",
+      "category": "boxes",
+      "fillable": true,
+      "name": {
+        "en": "Build Your Own — Small",
+        "ar": "جهّز صندوقك — صغير",
+        "he": "בנו בעצמכם — קטן"
+      },
+      "price": 60,
+      "slots": 6,
+      "tagline": {
+        "en": "6 cookies you choose",
+        "ar": "6 قطع كوكيز من اختيارك",
+        "he": "6 עוגיות שאתם בוחרים"
+      },
+      "accent": "#a3714a",
+      "hidden": false
+    },
+    {
+      "image": "/menu/build-box-medium.png",
+      "id": "build-box-medium",
+      "category": "boxes",
+      "fillable": true,
+      "name": {
+        "en": "Build Your Own — Medium",
+        "ar": "جهّز صندوقك — متوسط",
+        "he": "בנו בעצמכם — בינוני"
+      },
+      "price": 78,
+      "slots": 8,
+      "tagline": {
+        "en": "8 cookies you choose",
+        "ar": "8 قطع كوكيز من اختيارك",
+        "he": "8 עוגיות שאתם בוחרים"
+      },
+      "accent": "#8a5a3a",
+      "hidden": false
+    },
+    {
+      "image": "/menu/build-box-large.png",
+      "id": "build-box-large",
+      "category": "boxes",
+      "fillable": true,
+      "name": {
+        "en": "Build Your Own — Large",
+        "ar": "جهّز صندوقك — كبير",
+        "he": "בנו בעצמכם — גדול"
+      },
+      "price": 96,
+      "slots": 10,
+      "tagline": {
+        "en": "10 cookies you choose",
+        "ar": "10 قطع كوكيز من اختيارك",
+        "he": "10 עוגיות שאתם בוחרים"
+      },
+      "accent": "#7a4a2e",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cookie-dubai.jpeg",
+      "id": "cookie-dubai",
+      "category": "cookies",
+      "name": {
+        "en": "Dubai Cookie",
+        "ar": "كوكيز دبي",
+        "he": "עוגיית דובאי"
+      },
+      "price": 12,
+      "boxExtra": 2,
+      "tagline": {
+        "en": "Pistachio & crisp kunafa",
+        "ar": "فستق وكنافة مقرمشة",
+        "he": "פיסטוק וקדאיף פריך"
+      },
+      "description": {
+        "en": "The viral Dubai-style filling — pistachio cream and shredded kunafa — folded into a soft-baked cookie.",
+        "ar": "حشوة دبي الشهيرة من كريمة الفستق والكنافة المقرمشة داخل قطعة كوكيز طرية.",
+        "he": "המילוי הויראלי בסגנון דובאי — קרם פיסטוק וקדאיף — בתוך עוגייה רכה."
+      },
+      "accent": "#78966b",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cookie-kinder.jpeg",
+      "id": "cookie-kinder",
+      "category": "cookies",
+      "name": {
+        "en": "Kinder Cookie",
+        "ar": "كوكيز كندر",
+        "he": "עוגיית קינדר"
+      },
+      "price": 13,
+      "tagline": {
+        "en": "Milk & white drizzle",
+        "ar": "شوكولاتة بالحليب وشوكولاتة بيضاء",
+        "he": "זילוף חלב ולבן"
+      },
+      "description": {
+        "en": "Chocolate-chip cookie double-drizzled with milk and white chocolate and packed with Kinder pieces.",
+        "ar": "كوكيز بحبات الشوكولاتة، مغطى بشوكولاتة الحليب والشوكولاتة البيضاء وقطع كندر.",
+        "he": "עוגיית שוקולד צ'יפס עם זילוף כפול של שוקולד חלב ולבן וחתיכות קינדר."
+      },
+      "accent": "#8a5a3a",
+      "boxExtra": 3,
+      "hidden": false
+    },
+    {
+      "image": "/menu/cookie-chocolate.jpeg",
+      "id": "cookie-chocolate",
+      "category": "cookies",
+      "name": {
+        "en": "Chocolate Cookie",
+        "ar": "كوكيز شوكولاتة",
+        "he": "עוגיית שוקולד"
+      },
+      "price": 10,
+      "tagline": {
+        "en": "Molten chocolate heart",
+        "ar": "قلب شوكولاتة ذائب",
+        "he": "לב שוקולד נמס"
+      },
+      "description": {
+        "en": "A soft-baked cookie crowned with a swirl of chocolate spread and a whisper of edible gold.",
+        "ar": "كوكيز طري مغطى بدوامة من كريمة الشوكولاتة ولمسة من الذهب الصالح للأكل.",
+        "he": "עוגייה רכה עם מערבולת ממרח שוקולד ונגיעה של זהב אכיל."
+      },
+      "accent": "#7a4a2e",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cookie-pretzel.jpeg",
+      "id": "cookie-pretzel",
+      "category": "cookies",
+      "name": {
+        "en": "Pretzel Cookie",
+        "ar": "كوكيز بريتزل",
+        "he": "עוגיית בייגלה"
+      },
+      "price": 10,
+      "tagline": {
+        "en": "Sweet meets salty",
+        "ar": "حلو يلتقي بالمالح",
+        "he": "מתוק פוגש מלוח"
+      },
+      "description": {
+        "en": "Brown-butter cookie topped with caramel cream, a crunchy pretzel and a scatter of flaky sea salt.",
+        "ar": "كوكيز بالزبدة البنية مع كريمة الكراميل وقطعة بريتزل مقرمشة ورشة من ملح البحر.",
+        "he": "עוגיית חמאה חומה עם קרם קרמל, בייגלה פריך ומלח ים."
+      },
+      "accent": "#c87941",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cookie-coffee.jpeg",
+      "id": "cookie-coffee",
+      "category": "cookies",
+      "name": {
+        "en": "Coffee Cookie",
+        "ar": "كوكيز قهوة",
+        "he": "עוגיית קפה"
+      },
+      "price": 10,
+      "tagline": {
+        "en": "A gentle caffeine kick",
+        "ar": "لمسة كافيين خفيفة",
+        "he": "נגיעת קפאין עדינה"
+      },
+      "description": {
+        "en": "Espresso-infused dough with pools of melted dark chocolate for coffee lovers who like it soft.",
+        "ar": "عجينة بنكهة الإسبريسو مع قطع من الشوكولاتة الداكنة الذائبة لعشاق القهوة.",
+        "he": "בצק בטעם אספרסו עם שלוליות שוקולד מריר נמס לאוהבי הקפה."
+      },
+      "accent": "#6f4a2f",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cookie-amsterdam.jpeg",
+      "id": "cookie-amsterdam",
+      "category": "cookies",
+      "name": {
+        "en": "Amsterdam Cookie",
+        "ar": "كوكيز أمستردام",
+        "he": "עוגיית אמסטרדם"
+      },
+      "price": 12,
+      "boxExtra": 2,
+      "tagline": {
+        "en": "Triple-chocolate decadence",
+        "ar": "ثلاثة أنواع من الشوكولاتة",
+        "he": "שלושה סוגי שוקולד"
+      },
+      "description": {
+        "en": "Deep dark-chocolate cookie double-drizzled with milk and white chocolate and studded with chips.",
+        "ar": "كوكيز بالشوكولاتة الداكنة، مغطى بشوكولاتة الحليب والشوكولاتة البيضاء وقطع الشوكولاتة.",
+        "he": "עוגיית שוקולד מריר עמוק עם זילוף כפול של חלב ולבן ושברי שוקולד."
+      },
+      "accent": "#3b2117",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cookie-red-velvet.jpeg",
+      "id": "cookie-red-velvet",
+      "category": "cookies",
+      "name": {
+        "en": "Red Velvet Cookie",
+        "ar": "كوكيز ريد ڤيلڤيت",
+        "he": "עוגיית רד ולווט"
+      },
+      "price": 10,
+      "tagline": {
+        "en": "Cocoa-kissed & dreamy",
+        "ar": "كاكاو ناعم وحالم",
+        "he": "קקאו רך וחלומי"
+      },
+      "description": {
+        "en": "Velvety cocoa cookie with a tangy cream-cheese heart and ribbons of white chocolate on top.",
+        "ar": "كوكيز كاكاو مخملي بقلب جبن كريمي وخيوط شوكولاته بيضاء.",
+        "he": "עוגיית קקאו קטיפתית עם לב גבינה ופסי שוקולד לבן."
+      },
+      "accent": "#b3402f",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cookie-tiramisu.jpeg",
+      "id": "cookie-tiramisu",
+      "category": "cookies",
+      "name": {
+        "en": "Tiramisu Cookie",
+        "ar": "كوكيز تيراميسو",
+        "he": "עוגיית טירמיסו"
+      },
+      "price": 10,
+      "tagline": {
+        "en": "Coffee & mascarpone",
+        "ar": "قهوة وماسكربوني",
+        "he": "קפה ומסקרפונה"
+      },
+      "accent": "#9c7048",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cookie-classic.jpeg",
+      "id": "cookie-classic",
+      "category": "cookies",
+      "name": {
+        "en": "Classic Cookie",
+        "ar": "كوكيز كلاسيك",
+        "he": "עוגייה קלאסית"
+      },
+      "price": 10,
+      "tagline": {
+        "en": "The original chocolate chip",
+        "ar": "الكوكيز الأصلي بحبات الشوكولاتة",
+        "he": "המקורית עם שוקולד צ'יפס"
+      },
+      "accent": "#a3714a",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cookie-bites.jpeg",
+      "id": "cookie-bites",
+      "category": "cookies",
+      "name": {
+        "en": "Cookie Bites",
+        "ar": "لقيمات كوكيز",
+        "he": "קוקי בייטס"
+      },
+      "price": 40,
+      "tagline": {
+        "en": "A boxful of bite-size",
+        "ar": "علبة مليئة بالقضمات",
+        "he": "קופסה מלאה בביסים"
+      },
+      "accent": "#8a5a3a",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cookie-mini.jpeg",
+      "id": "cookie-mini",
+      "category": "cookies",
+      "name": {
+        "en": "Mini Cookie",
+        "ar": "ميني كوكيز",
+        "he": "עוגייה קטנה"
+      },
+      "price": 6,
+      "tagline": {
+        "en": "One small bite",
+        "ar": "قضمة صغيرة",
+        "he": "ביס אחד קטן"
+      },
+      "accent": "#c87941",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cookie-mini-8.jpeg",
+      "id": "cookie-mini-8",
+      "category": "cookies",
+      "name": {
+        "en": "8 Mini Cookies",
+        "ar": "8 حبات ميني كوكيز",
+        "he": "8 עוגיות קטנות"
+      },
+      "price": 50,
+      "tagline": {
+        "en": "Eight to share",
+        "ar": "ثمانية للمشاركة",
+        "he": "שמונה לחלוק"
+      },
+      "accent": "#b3823f",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cake-orange.jpeg",
+      "id": "cake-orange",
+      "category": "cakes",
+      "name": {
+        "en": "Orange Cake",
+        "ar": "كعكة برتقال",
+        "he": "עוגת תפוזים"
+      },
+      "price": 60,
+      "tagline": {
+        "en": "Bright & citrusy",
+        "ar": "منعشة وحمضية",
+        "he": "רעננה והדרית"
+      },
+      "accent": "#d98324",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cake-orange-chocolate.jpeg",
+      "id": "cake-orange-chocolate",
+      "category": "cakes",
+      "name": {
+        "en": "Orange & Chocolate Cake",
+        "ar": "كعكة البرتقال والشوكولاتة",
+        "he": "עוגת תפוזים ושוקולד"
+      },
+      "price": 70,
+      "tagline": {
+        "en": "Citrus under dark chocolate",
+        "ar": "حمضيات مع شوكولاتة داكنة",
+        "he": "הדרים תחת שוקולד מריר"
+      },
+      "accent": "#a85c1f",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cake-red-velvet-loaf.jpeg",
+      "id": "cake-red-velvet-loaf",
+      "category": "cakes",
+      "name": {
+        "en": "Red Velvet Loaf",
+        "ar": "قالب ريد ڤيلڤيت",
+        "he": "עוגת רד ולווט (אצבע)"
+      },
+      "price": 50,
+      "tagline": {
+        "en": "Loaf-cut, cream-cheese finish",
+        "ar": "قالب مغطى بطبقة من الجبن الكريمي",
+        "he": "בחיתוך אצבע עם קרם גבינה"
+      },
+      "accent": "#b3402f",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cake-red-velvet.jpeg",
+      "id": "cake-red-velvet",
+      "category": "cakes",
+      "name": {
+        "en": "Red Velvet Cake",
+        "ar": "كعكة ريد ڤيلڤيت",
+        "he": "עוגת רד ולווט"
+      },
+      "price": 150,
+      "tagline": {
+        "en": "The full celebration cake",
+        "ar": "كعكة الاحتفال الكاملة",
+        "he": "עוגת החגיגה המלאה"
+      },
+      "accent": "#8f2f22",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cake-walnut-maple.jpeg",
+      "id": "cake-walnut-maple",
+      "category": "cakes",
+      "name": {
+        "en": "Walnut & Maple Cake",
+        "ar": "كعكة الجوز وشراب القيقب",
+        "he": "עוגת אגוזים ומייפל"
+      },
+      "price": 40,
+      "tagline": {
+        "en": "Toasted walnut, maple glaze",
+        "ar": "جوز محمص وصلصة القيقب",
+        "he": "אגוזים קלויים וזיגוג מייפל"
+      },
+      "accent": "#8a5a3a",
+      "hidden": false
+    },
+    {
+      "image": "/menu/brownies-12.jpeg",
+      "id": "brownies-12",
+      "category": "cakes",
+      "name": {
+        "en": "Brownies · 12 pieces",
+        "ar": "12 قطعة براونيز",
+        "he": "בראוניז (12 יחידות)"
+      },
+      "price": 40,
+      "tagline": {
+        "en": "Dense, fudgy squares",
+        "ar": "مربعات غنية وطرية",
+        "he": "ריבועים דחוסים ורכים"
+      },
+      "accent": "#4a2a1c",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cake-tiramisu.jpeg",
+      "id": "cake-tiramisu",
+      "category": "cakes",
+      "name": {
+        "en": "Tiramisu Cake",
+        "ar": "كعكة تيراميسو",
+        "he": "עוגת טירמיסו"
+      },
+      "price": 60,
+      "tagline": {
+        "en": "Coffee-soaked layers",
+        "ar": "طبقات مشبعة بالقهوة",
+        "he": "שכבות ספוגות קפה"
+      },
+      "accent": "#9c7048",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cake-chocolate.jpeg",
+      "id": "cake-chocolate",
+      "category": "cakes",
+      "name": {
+        "en": "Chocolate Cake",
+        "ar": "كعكة الشوكولاتة",
+        "he": "עוגת שוקולד"
+      },
+      "price": 40,
+      "tagline": {
+        "en": "Deep and simple",
+        "ar": "غنية وبسيطة",
+        "he": "עשירה ופשוטה"
+      },
+      "accent": "#3b2117",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cake-pineapple.jpeg",
+      "id": "cake-pineapple",
+      "category": "cakes",
+      "name": {
+        "en": "Pineapple Cake",
+        "ar": "كعكة الأناناس",
+        "he": "עוגת אננס"
+      },
+      "price": 40,
+      "tagline": {
+        "en": "Soft, fruity, light",
+        "ar": "طرية وفاكهية وخفيفة",
+        "he": "רכה, פירותית וקלילה"
+      },
+      "accent": "#c9a227",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cake-bento.jpeg",
+      "id": "cake-bento",
+      "category": "cakes",
+      "name": {
+        "en": "Bento Cake",
+        "ar": "كعكة بينتو",
+        "he": "עוגת בנטו"
+      },
+      "price": 120,
+      "tagline": {
+        "en": "Small cake, big occasion",
+        "ar": "كعكة صغيرة لمناسبة كبيرة",
+        "he": "עוגה קטנה לאירוע גדול"
+      },
+      "accent": "#d98324",
+      "hidden": false
+    },
+    {
+      "image": "/menu/mini-souffle.jpeg",
+      "id": "mini-souffle",
+      "category": "mini-cakes",
+      "name": {
+        "en": "Soufflé",
+        "ar": "سوفليه",
+        "he": "סופלה"
+      },
+      "price": 20,
+      "tagline": {
+        "en": "Warm and molten",
+        "ar": "دافئ وذائب",
+        "he": "חם ונמס"
+      },
+      "accent": "#7a4a2e",
+      "hidden": false
+    },
+    {
+      "image": "/menu/mini-red-velvet.jpeg",
+      "id": "mini-red-velvet",
+      "category": "mini-cakes",
+      "name": {
+        "en": "Red Velvet",
+        "ar": "ريد ڤيلڤيت",
+        "he": "רד ולווט"
+      },
+      "price": 20,
+      "tagline": {
+        "en": "Cocoa & cream cheese",
+        "ar": "كاكاو وجبن كريمي",
+        "he": "קקאו וקרם גבינה"
+      },
+      "accent": "#b3402f",
+      "hidden": false
+    },
+    {
+      "image": "/menu/mini-chocolate-crunch.jpeg",
+      "id": "mini-chocolate-crunch",
+      "category": "mini-cakes",
+      "name": {
+        "en": "Chocolate Crunch",
+        "ar": "كرانش شوكولاتة",
+        "he": "קראנץ' שוקולד"
+      },
+      "price": 20,
+      "tagline": {
+        "en": "Smooth with a snap",
+        "ar": "ناعم مع قرمشة",
+        "he": "חלק עם פריכות"
+      },
+      "accent": "#4a2a1c",
+      "hidden": false
+    },
+    {
+      "image": "/menu/mini-tiramisu.jpeg",
+      "id": "mini-tiramisu",
+      "category": "mini-cakes",
+      "name": {
+        "en": "Tiramisu",
+        "ar": "تيراميسو",
+        "he": "טירמיסו"
+      },
+      "price": 20,
+      "tagline": {
+        "en": "Coffee & mascarpone",
+        "ar": "قهوة وماسكربوني",
+        "he": "קפה ומסקרפונה"
+      },
+      "accent": "#9c7048",
+      "hidden": false
+    },
+    {
+      "image": "/menu/mini-oreo.jpeg",
+      "id": "mini-oreo",
+      "category": "mini-cakes",
+      "name": {
+        "en": "Oreo",
+        "ar": "أوريو",
+        "he": "אוראו"
+      },
+      "price": 10,
+      "tagline": {
+        "en": "Cookies and cream",
+        "ar": "بسكويت وكريمة",
+        "he": "עוגיות ושמנת"
+      },
+      "accent": "#2f2f2f",
+      "hidden": false
+    },
+    {
+      "image": "/menu/mini-chocolate.jpeg",
+      "id": "mini-chocolate",
+      "category": "mini-cakes",
+      "name": {
+        "en": "Chocolate",
+        "ar": "شوكولاتة",
+        "he": "שוקולד"
+      },
+      "price": 20,
+      "tagline": {
+        "en": "For the purists",
+        "ar": "للكلاسيكيين",
+        "he": "לטהרנים"
+      },
+      "accent": "#3b2117",
+      "hidden": false
+    },
+    {
+      "image": "/menu/mini-lotus.jpeg",
+      "id": "mini-lotus",
+      "category": "mini-cakes",
+      "name": {
+        "en": "Lotus",
+        "ar": "لوتوس",
+        "he": "לוטוס"
+      },
+      "price": 20,
+      "tagline": {
+        "en": "Caramelised biscuit",
+        "ar": "بسكويت بالكراميل",
+        "he": "ביסקוויט מקורמל"
+      },
+      "accent": "#b3823f",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cupcake-chocolate.jpeg",
+      "id": "cupcake-chocolate",
+      "category": "mini-cakes",
+      "name": {
+        "en": "Chocolate Cupcake",
+        "ar": "كب كيك بالشوكولاتة",
+        "he": "קאפקייק שוקולד"
+      },
+      "price": 10,
+      "tagline": {
+        "en": "One-hand dessert",
+        "ar": "حلوى بيد واحدة",
+        "he": "קינוח ביד אחת"
+      },
+      "accent": "#5a3423",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cupcake-vanilla.jpeg",
+      "id": "cupcake-vanilla",
+      "category": "mini-cakes",
+      "name": {
+        "en": "Vanilla Cupcake",
+        "ar": "كب كيك بالفانيلا",
+        "he": "קאפקייק וניל"
+      },
+      "price": 10,
+      "tagline": {
+        "en": "Proper vanilla, nothing else",
+        "ar": "فانيلا حقيقية، بلا إضافات",
+        "he": "וניל אמיתי, שום דבר אחר"
+      },
+      "accent": "#c9a86a",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cinnabon-single.jpeg",
+      "id": "cinnabon-single",
+      "category": "cinnabon",
+      "name": {
+        "en": "Cinnamon Roll",
+        "ar": "سينابون",
+        "he": "סינבון"
+      },
+      "price": 12,
+      "tagline": {
+        "en": "Soft, glazed, still warm",
+        "ar": "طري ومغطى وما زال دافئاً",
+        "he": "רך, מזוגג ועדיין חם"
+      },
+      "accent": "#b3823f",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cinnabon-loaf.jpeg",
+      "id": "cinnabon-loaf",
+      "category": "cinnabon",
+      "name": {
+        "en": "Cinnamon Roll Loaf",
+        "ar": "قالب سينابون",
+        "he": "אצבע סינבון"
+      },
+      "price": 40,
+      "tagline": {
+        "en": "Pull-apart loaf",
+        "ar": "قالب مناسب للتقطيع",
+        "he": "אצבע לפריסה"
+      },
+      "accent": "#a3714a",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cinnabon-6.jpeg",
+      "id": "cinnabon-6",
+      "category": "cinnabon",
+      "name": {
+        "en": "6 Cinnamon Rolls",
+        "ar": "6 حبات سينابون",
+        "he": "6 יחידות סינבון"
+      },
+      "price": 70,
+      "tagline": {
+        "en": "Half a tray",
+        "ar": "نصف صينية",
+        "he": "חצי מגש"
+      },
+      "accent": "#8a5a3a",
+      "hidden": false
+    },
+    {
+      "image": "/menu/cinnabon-8.jpeg",
+      "id": "cinnabon-8",
+      "category": "cinnabon",
+      "name": {
+        "en": "8 Cinnamon Rolls",
+        "ar": "8 حبات سينابون",
+        "he": "8 יחידות סינבון"
+      },
+      "price": 90,
+      "tagline": {
+        "en": "The full tray",
+        "ar": "صينية كاملة",
+        "he": "מגש שלם"
+      },
+      "accent": "#7a4a2e",
+      "hidden": false
+    },
+    {
+      "image": "/menu/choc-balls-12.jpeg",
+      "id": "choc-balls-12",
+      "category": "treats",
+      "name": {
+        "en": "Chocolate Balls · 12",
+        "ar": "12 حبة من كرات الشوكولاتة",
+        "he": "12 כדורי שוקולד"
+      },
+      "price": 20,
+      "tagline": {
+        "en": "Twelve little bites",
+        "ar": "اثنتا عشرة قضمة",
+        "he": "שנים עשר ביסים"
+      },
+      "accent": "#5a3423",
+      "hidden": false
+    },
+    {
+      "image": "/menu/choc-balls-17.jpeg",
+      "id": "choc-balls-17",
+      "category": "treats",
+      "name": {
+        "en": "Chocolate Balls · 17",
+        "ar": "17 حبة من كرات الشوكولاتة",
+        "he": "17 כדורי שוקולד"
+      },
+      "price": 30,
+      "tagline": {
+        "en": "Seventeen little bites",
+        "ar": "سبع عشرة قضمة",
+        "he": "שבעה עשר ביסים"
+      },
+      "accent": "#4a2a1c",
+      "hidden": false
+    },
+    {
+      "image": "/menu/choc-balls-29.jpeg",
+      "id": "choc-balls-29",
+      "category": "treats",
+      "name": {
+        "en": "Chocolate Balls · 29",
+        "ar": "29 حبة من كرات الشوكولاتة",
+        "he": "29 כדורי שוקולד"
+      },
+      "price": 50,
+      "tagline": {
+        "en": "Twenty-nine little bites",
+        "ar": "تسع وعشرون قضمة",
+        "he": "עשרים ותשעה ביסים"
+      },
+      "accent": "#3b2117",
+      "hidden": false
+    }
+  ]
+}

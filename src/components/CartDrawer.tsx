@@ -123,30 +123,29 @@ export default function CartDrawer() {
   return (
     <div
       dir="ltr"
-      // Lenis hijacks wheel/touch on the document. Without this the drawer
-      // cannot scroll at all: Lenis swallows the gesture and forwards it to
-      // the page, which is scroll-locked while the bag is open.
-      data-lenis-prevent
-      className={`cart-overlay-scroll fixed inset-0 z-[150] overflow-x-hidden overflow-y-auto overscroll-contain ${
-        isOpen ? "" : "pointer-events-none"
-      }`}
+      className={`fixed inset-0 z-[150] ${isOpen ? "" : "pointer-events-none"}`}
       aria-hidden={!isOpen}
     >
-      {/* Scrim */}
+      {/* Scrim. Deliberately NOT inside a scrolling element: a backdrop-filter
+          nested in an overflow container drops out and repaints on iOS Safari,
+          which reads as the drawer flickering in and out as it opens. */}
       <div
-        className={`fixed inset-0 bg-chocolate/50 backdrop-blur-sm transition-opacity duration-300 ${
+        className={`absolute inset-0 bg-chocolate/50 backdrop-blur-sm transition-opacity duration-300 ${
           isOpen ? "opacity-100" : "opacity-0"
         }`}
         onClick={handleClose}
       />
 
-      {/* Panel */}
+      {/* Panel — this is the scroll container, so the scrim above stays put.
+          Lenis otherwise hijacks wheel/touch here and forwards it to the page,
+          which is scroll-locked while the bag is open, so nothing scrolls. */}
       <div
         dir={lang === "en" ? "ltr" : "rtl"}
+        data-lenis-prevent
         role="dialog"
         aria-modal="true"
         aria-label={t("bag.title")}
-        className={`relative ml-auto flex min-h-full w-full max-w-md flex-col bg-cream shadow-2xl transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] sm:max-w-xl ${
+        className={`cart-overlay-scroll absolute inset-y-0 right-0 flex w-full max-w-md flex-col overflow-y-auto overscroll-contain bg-cream shadow-2xl transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] sm:max-w-xl ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >

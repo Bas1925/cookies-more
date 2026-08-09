@@ -8,6 +8,7 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import { NAV_LINKS } from "@/lib/data";
 import { useCart } from "@/lib/cart-context";
 import { useLanguage } from "@/lib/language-context";
+import { lockScroll, unlockScroll } from "@/lib/scroll-lock";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -30,10 +31,10 @@ export default function Navbar() {
       if (e.key === "Escape") setMenuOpen(false);
     };
     document.addEventListener("keydown", onKey);
-    document.documentElement.classList.add("no-scroll");
+    lockScroll();
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.documentElement.classList.remove("no-scroll");
+      unlockScroll();
     };
   }, [menuOpen]);
 

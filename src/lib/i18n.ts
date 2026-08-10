@@ -273,17 +273,6 @@ export const UI = {
   },
   "footer.explore": { en: "Explore", ar: "تصفّح", he: "ניווט" },
   "footer.follow": { en: "Follow us", ar: "تابعونا", he: "עקבו אחרינו" },
-  "footer.order": { en: "Order", ar: "اطلب", he: "הזמנה" },
-  "footer.orderText": {
-    en: "Delivery and pickup during opening hours. Order straight from this site, or through our order page — cash on delivery or pickup either way.",
-    ar: "توصيل واستلام خلال ساعات العمل. اطلب مباشرة من هذا الموقع أو عبر صفحة الطلبات — الدفع نقدًا عند التوصيل أو الاستلام في الحالتين.",
-    he: "משלוח ואיסוף בשעות הפעילות. הזמינו ישירות מהאתר או דרך דף ההזמנות — בכל מקרה התשלום במזומן במשלוח או באיסוף.",
-  },
-  "footer.orderCta": {
-    en: "Order online",
-    ar: "اطلب أونلاين",
-    he: "הזמנה אונליין",
-  },
   "footer.privacy": {
     en: "Privacy Policy",
     ar: "سياسة الخصوصية",

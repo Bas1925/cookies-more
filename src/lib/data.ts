@@ -117,7 +117,6 @@ export const STORE = {
     ar: "٩:٠٠ – ٢٢:٠٠ يومياً",
     he: "09:00 – 22:00, כל יום",
   } as Localized,
-  orderUrl: "https://take.app/cookiesandmore",
   instagramUrl: "https://www.instagram.com/coo_kies.and.more",
 };
 

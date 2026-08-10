@@ -5,7 +5,6 @@ import {
   boxLinePrice,
   boxCapacity,
   DELIVERY_FEE,
-  DISCOUNT_CODES,
   getBoxFillings,
   getProduct,
 } from "@/lib/data";
@@ -19,7 +18,6 @@ export const dynamic = "force-dynamic";
 interface CheckoutBody {
   lines?: CartLine[];
   fulfillment?: Fulfillment;
-  discountCode?: string | null;
   customerName?: string;
   phone?: string;
 }
@@ -145,16 +143,9 @@ export async function POST(request: Request) {
   }
 
   const subtotal = orderLines.reduce((sum, line) => sum + line.lineTotal, 0);
-  const code =
-    typeof body.discountCode === "string"
-      ? body.discountCode.trim().toUpperCase()
-      : null;
-  const pct = code && DISCOUNT_CODES[code] ? DISCOUNT_CODES[code] : 0;
-  const discountAmount = Math.round(subtotal * pct * 100) / 100;
   const deliveryFee =
     fulfillment === "delivery" && subtotal > 0 ? DELIVERY_FEE : 0;
-  const total =
-    Math.round((subtotal - discountAmount + deliveryFee) * 100) / 100;
+  const total = Math.round((subtotal + deliveryFee) * 100) / 100;
 
   const order: Order = {
     id: `ord_${Date.now().toString(36)}_${randomBytes(3).toString("hex")}`,
@@ -162,10 +153,12 @@ export async function POST(request: Request) {
     customerName,
     phone,
     fulfillment,
-    discountCode: pct ? code : null,
+    // Kept at zero rather than dropped: orders placed before discount codes
+    // were removed still carry real values, and the admin reads these fields.
+    discountCode: null,
     lines: orderLines,
     subtotal,
-    discountAmount,
+    discountAmount: 0,
     deliveryFee,
     total,
     source: "website",

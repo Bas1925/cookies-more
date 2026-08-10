@@ -49,7 +49,7 @@ const COPY: Record<Lang, PrivacyCopy> = {
       {
         title: "Payments",
         paragraphs: [
-          "Checkout on this website is currently a demonstration. No real payment is taken and we do not collect or store card or bank details.",
+          "Orders are paid in cash on delivery or at pickup. No payment is taken on this website, and we do not collect or store card or bank details.",
         ],
       },
       {
@@ -106,7 +106,7 @@ const COPY: Record<Lang, PrivacyCopy> = {
       {
         title: "الدفع",
         paragraphs: [
-          "إتمام الطلب في هذا الموقع تجريبي حاليًا. لا يتم تحصيل أي دفعة حقيقية، ولا نجمع أو نخزن بيانات البطاقات أو الحسابات البنكية.",
+          "يتم الدفع نقدًا عند التوصيل أو الاستلام. لا يتم تحصيل أي مبلغ عبر هذا الموقع، ولا نجمع أو نخزن بيانات البطاقات أو الحسابات البنكية.",
         ],
       },
       {
@@ -163,7 +163,7 @@ const COPY: Record<Lang, PrivacyCopy> = {
       {
         title: "תשלומים",
         paragraphs: [
-          "התשלום באתר הוא כרגע להדגמה בלבד. לא נגבה תשלום אמיתי ואיננו אוספים או שומרים פרטי כרטיס או חשבון בנק.",
+          "התשלום מתבצע במזומן במשלוח או באיסוף. לא נגבה תשלום באתר זה ואיננו אוספים או שומרים פרטי כרטיס או חשבון בנק.",
         ],
       },
       {

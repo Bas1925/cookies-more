@@ -5,10 +5,12 @@ The menu mirrors the live order page at
 [take.app/cookiesandmore](https://take.app/cookiesandmore) — real items, real
 ₪ prices, in English and Arabic.
 
-Checkout on this site is still a **front-end demo**: there is no backend, and
-**no real payments are processed**. Real orders go through the take.app page.
+**Orders placed here are real.** Checkout saves the order, and the shop is
+pushed a notification on the spot. No money changes hands online — customers
+pay **cash on delivery or at pickup** — so the site never collects card or
+bank details.
 
-Warm editorial design: oversized display type, real product photography, cinematic scroll animations, and a fully working (mock) shopping flow.
+Warm editorial design: oversized display type, real product photography, cinematic scroll animations, and a full shopping flow.
 
 ---
 
@@ -68,7 +70,7 @@ src/
 │  ├─ SmoothScroll.tsx     # Lenis ↔ GSAP ScrollTrigger bridge
 │  ├─ Preloader.tsx        # sub-2s intro built from the logo image
 │  ├─ Navbar.tsx           # sticky nav + animated mobile menu
-│  ├─ CartDrawer.tsx       # cart, quantities, discount, delivery/pickup, mock checkout
+│  ├─ CartDrawer.tsx       # cart, quantities, delivery/pickup, checkout
 │  ├─ AnimatedHeading.tsx  # SplitType word-by-word reveal
 │  ├─ ProductThumb.tsx     # rounded thumbnail; falls back to an accent tile
 │  ├─ ProductCard.tsx      # square photo card + add-to-bag
@@ -215,7 +217,6 @@ reader's language.
 - Add any menu item, or a filled box, to the bag — the drawer does **not**
   pop open; it opens only when the customer taps the bag
 - Quantity steppers, remove, and clear
-- Discount codes — try `WARM10`, `FRESH15`, or `COOKIES20`
 - Delivery vs. pickup (delivery adds a fee)
 - Loading / empty / success / error states throughout
 - Cart persists across reloads via `localStorage` (key `cookies-and-more-cart-v2`);
@@ -234,8 +235,8 @@ reader's language.
 - The box-builder list only becomes a scroll region from `lg` up. On a phone a
   fixed-height window holding a long list is a trap: a thumb swipe scrolls the
   inner list instead of the page
-- The discount input is 16px on phones (`text-base sm:text-sm`); anything
-  smaller makes iOS zoom in when it takes focus
+- Text inputs are 16px on phones (`text-base sm:text-sm`); anything smaller
+  makes iOS zoom in when they take focus
 - The cart drawer's footer clears the iOS home indicator via
   `env(safe-area-inset-bottom)`
 
@@ -253,7 +254,11 @@ reader's language.
 
 - Item names and prices come from the store's live order page. If the menu
   changes there, update `PRODUCTS` in `src/lib/data.ts` to match.
-- **Checkout here is a simulation.** No payment is taken and no order reaches
-  the bakery — the footer links out to take.app for real orders.
-- Discount codes (`WARM10`, `FRESH15`, `COOKIES20`) are demo codes, not real
-  store promotions.
+- **Orders are real and reach the bakery.** Checkout saves the order and pushes
+  a notification to the admin phone. Payment is cash on delivery or at pickup;
+  the site takes no money and stores no card or bank details.
+- There are no discount codes. `WARM10`, `FRESH15` and `COOKIES20` were demo
+  codes that really discounted the total, so they were removed along with the
+  code input in the bag. Historical orders keep whatever discount they were
+  placed with, which is why `Order.discountCode` and `discountAmount` still
+  exist on the type and still render in the admin.

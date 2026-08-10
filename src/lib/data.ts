@@ -105,13 +105,6 @@ export function formatPrice(amount: number): string {
   return `${CURRENCY}${body}`;
 }
 
-/** Demonstration discount codes only — not real store promotions. */
-export const DISCOUNT_CODES: Record<string, number> = {
-  WARM10: 0.1,
-  COOKIES20: 0.2,
-  FRESH15: 0.15,
-};
-
 /** TODO: confirm the real delivery fee with the store. */
 export const DELIVERY_FEE = 15;
 

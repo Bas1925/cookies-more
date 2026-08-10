@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import type { CartLine, Fulfillment } from "./types";
-import { DELIVERY_FEE, DISCOUNT_CODES, getProduct, boxLinePrice } from "./data";
+import { DELIVERY_FEE, getProduct, boxLinePrice } from "./data";
 import { lockScroll, unlockScroll } from "./scroll-lock";
 
 // v2: the menu moved from the demo flavors to the real catalogue, so any
@@ -20,17 +20,11 @@ const STORAGE_KEY = "cookies-and-more-cart-v2";
 interface StoredState {
   lines: CartLine[];
   fulfillment: Fulfillment;
-  discountCode: string | null;
 }
-
-export type DiscountResult =
-  | { ok: true; reason: "applied"; pct: number }
-  | { ok: false; reason: "empty" | "invalid" };
 
 export interface CartTotals {
   count: number;
   subtotal: number;
-  discountAmount: number;
   deliveryFee: number;
   total: number;
 }
@@ -40,7 +34,6 @@ interface CartContextValue {
   isOpen: boolean;
   isHydrated: boolean;
   fulfillment: Fulfillment;
-  discountCode: string | null;
   totals: CartTotals;
   openCart: () => void;
   closeCart: () => void;
@@ -50,12 +43,6 @@ interface CartContextValue {
   removeLine: (id: string) => void;
   clearCart: () => void;
   setFulfillment: (f: Fulfillment) => void;
-  /**
-   * Returns a result the caller renders — the copy lives in the UI layer so
-   * it can be translated, rather than being baked in here in English.
-   */
-  applyDiscount: (code: string) => DiscountResult;
-  clearDiscount: () => void;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -86,7 +73,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
   const [fulfillment, setFulfillmentState] = useState<Fulfillment>("delivery");
-  const [discountCode, setDiscountCode] = useState<string | null>(null);
 
   // Hydrate from localStorage after mount. Deferred to a microtask so the
   // initial committed render matches the server (empty cart), avoiding a
@@ -103,8 +89,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
             parsed.fulfillment === "pickup"
           )
             setFulfillmentState(parsed.fulfillment);
-          if (typeof parsed.discountCode === "string")
-            setDiscountCode(parsed.discountCode);
         }
       } catch {
         // Corrupt storage — start fresh, no crash.
@@ -116,13 +100,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
   // Persist whenever state changes (after hydration).
   useEffect(() => {
     if (!isHydrated) return;
-    const payload: StoredState = { lines, fulfillment, discountCode };
+    const payload: StoredState = { lines, fulfillment };
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     } catch {
       // Storage full or unavailable — non-fatal.
     }
-  }, [lines, fulfillment, discountCode, isHydrated]);
+  }, [lines, fulfillment, isHydrated]);
 
   // Lock body scroll while the drawer is open. lockScroll also pauses Lenis
   // and restores the offset on release — see lib/scroll-lock.
@@ -177,28 +161,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const clearCart = useCallback(() => {
     setLines([]);
-    setDiscountCode(null);
   }, []);
 
   const setFulfillment = useCallback((f: Fulfillment) => {
     setFulfillmentState(f);
   }, []);
-
-  const applyDiscount = useCallback((code: string): DiscountResult => {
-    const normalized = code.trim().toUpperCase();
-    if (!normalized) return { ok: false, reason: "empty" };
-    if (normalized in DISCOUNT_CODES) {
-      setDiscountCode(normalized);
-      return {
-        ok: true,
-        reason: "applied",
-        pct: Math.round(DISCOUNT_CODES[normalized] * 100),
-      };
-    }
-    return { ok: false, reason: "invalid" };
-  }, []);
-
-  const clearDiscount = useCallback(() => setDiscountCode(null), []);
 
   const totals = useMemo<CartTotals>(() => {
     let count = 0;
@@ -215,13 +182,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
       count += line.qty;
       subtotal += boxLinePrice(line.boxId, line.contents) * line.qty;
     }
-    const rate = discountCode ? DISCOUNT_CODES[discountCode] ?? 0 : 0;
-    const discountAmount = subtotal * rate;
     const deliveryFee =
       fulfillment === "delivery" && subtotal > 0 ? DELIVERY_FEE : 0;
-    const total = Math.max(0, subtotal - discountAmount) + deliveryFee;
-    return { count, subtotal, discountAmount, deliveryFee, total };
-  }, [lines, discountCode, fulfillment]);
+    const total = subtotal + deliveryFee;
+    return { count, subtotal, deliveryFee, total };
+  }, [lines, fulfillment]);
 
   const value = useMemo<CartContextValue>(
     () => ({
@@ -229,7 +194,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
       isOpen,
       isHydrated,
       fulfillment,
-      discountCode,
       totals,
       openCart,
       closeCart,
@@ -239,15 +203,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeLine,
       clearCart,
       setFulfillment,
-      applyDiscount,
-      clearDiscount,
     }),
     [
       lines,
       isOpen,
       isHydrated,
       fulfillment,
-      discountCode,
       totals,
       openCart,
       closeCart,
@@ -257,8 +218,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeLine,
       clearCart,
       setFulfillment,
-      applyDiscount,
-      clearDiscount,
     ],
   );
 

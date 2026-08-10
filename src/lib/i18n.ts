@@ -275,9 +275,9 @@ export const UI = {
   "footer.follow": { en: "Follow us", ar: "تابعونا", he: "עקבו אחרינו" },
   "footer.order": { en: "Order", ar: "اطلب", he: "הזמנה" },
   "footer.orderText": {
-    en: "Delivery and pickup during opening hours. Place a real order through our order page — checkout on this site is a demo.",
-    ar: "توصيل واستلام خلال ساعات العمل. للطلب الفعلي استخدم صفحة الطلبات — الدفع في هذا الموقع تجريبي.",
-    he: "משלוח ואיסוף בשעות הפעילות. להזמנה אמיתית השתמשו בדף ההזמנות — התשלום באתר הזה הוא הדגמה.",
+    en: "Delivery and pickup during opening hours. Order straight from this site, or through our order page — cash on delivery or pickup either way.",
+    ar: "توصيل واستلام خلال ساعات العمل. اطلب مباشرة من هذا الموقع أو عبر صفحة الطلبات — الدفع نقدًا عند التوصيل أو الاستلام في الحالتين.",
+    he: "משלוח ואיסוף בשעות הפעילות. הזמינו ישירות מהאתר או דרך דף ההזמנות — בכל מקרה התשלום במזומן במשלוח או באיסוף.",
   },
   "footer.orderCta": {
     en: "Order online",
@@ -290,9 +290,9 @@ export const UI = {
     he: "מדיניות פרטיות",
   },
   "footer.rights": {
-    en: "Cookies & More — checkout on this site is a demo, no payment is taken.",
-    ar: "Cookies & More — الدفع في هذا الموقع تجريبي ولا يتم تحصيل أي مبلغ.",
-    he: "‏Cookies & More — התשלום באתר הזה הוא הדגמה, לא נגבה תשלום.",
+    en: "Cookies & More — fresh cookies, cakes and cinnamon rolls.",
+    ar: "Cookies & More — كوكيز وكعك وسينابون طازجة.",
+    he: "‏Cookies & More — עוגיות, עוגות וסינבון טריים.",
   },
 
   // ── Cart drawer ──────────────────────────────────────────────────────
@@ -347,30 +347,15 @@ export const UI = {
     ar: "أدخل رقم هاتف مكوّنًا من 10 أرقام.",
     he: "הזינו מספר טלפון בן 10 ספרות.",
   },
-  "bag.discount": { en: "Discount code", ar: "رمز الخصم", he: "קוד הנחה" },
-  "bag.apply": { en: "Apply", ar: "تطبيق", he: "החלה" },
-  "bag.codePlaceholder": {
-    en: "Try WARM10",
-    ar: "جرّب WARM10",
-    he: "נסו WARM10",
-  },
-  "bag.codeApplied": { en: "{code} applied", ar: "تم تطبيق الرمز {code}", he: "{code} הוחל" },
-  "bag.remove": { en: "Remove", ar: "إزالة", he: "הסרה" },
-  "bag.demoCodes": {
-    en: "Demo codes: WARM10, FRESH15, COOKIES20",
-    ar: "رموز تجريبية: WARM10, FRESH15, COOKIES20",
-    he: "קודים להדגמה: WARM10, FRESH15, COOKIES20",
-  },
   "bag.subtotal": { en: "Subtotal", ar: "المجموع الفرعي", he: "סכום ביניים" },
-  "bag.discountRow": { en: "Discount", ar: "الخصم", he: "הנחה" },
   "bag.total": { en: "Total", ar: "الإجمالي", he: "סה״כ" },
   "bag.free": { en: "Free", ar: "مجاناً", he: "חינם" },
   "bag.checkout": { en: "Checkout", ar: "إتمام الطلب", he: "לתשלום" },
   "bag.processing": { en: "Processing…", ar: "جارٍ المعالجة…", he: "מעבד…" },
-  "bag.demoNote": {
-    en: "Demo only — no real payment is taken.",
-    ar: "للتجربة فقط — لا يتم تحصيل أي دفعة حقيقية.",
-    he: "הדגמה בלבד — לא נגבה תשלום אמיתי.",
+  "bag.paymentNote": {
+    en: "Pay in cash on delivery or at pickup.",
+    ar: "الدفع نقدًا عند التوصيل أو الاستلام.",
+    he: "התשלום במזומן במשלוח או באיסוף.",
   },
   "bag.error": {
     en: "Something went wrong. Please try again.",
@@ -379,9 +364,9 @@ export const UI = {
   },
   "bag.successTitle": { en: "Order placed!", ar: "تم الطلب!", he: "ההזמנה בוצעה!" },
   "bag.successText": {
-    en: "This is a demonstration checkout, so no payment was taken. In a real shop your warm cookies would be on their way.",
-    ar: "هذا طلب تجريبي، لذلك لم يتم تحصيل أي مبلغ. في متجر حقيقي، كان الكوكيز الدافئ في طريقه إليك.",
-    he: "זהו תהליך תשלום להדגמה, ולכן לא נגבה תשלום. בחנות אמיתית העוגיות החמות שלכם כבר היו בדרך.",
+    en: "We’ve got your order. We’ll call you shortly on the number you gave to confirm the details. Pay in cash on delivery or at pickup.",
+    ar: "استلمنا طلبك. سنتصل بك قريبًا على الرقم الذي أدخلته لتأكيد التفاصيل. الدفع نقدًا عند التوصيل أو الاستلام.",
+    he: "קיבלנו את ההזמנה שלכם. נתקשר אליכם בקרוב למספר שהשארתם כדי לאשר את הפרטים. התשלום במזומן במשלוח או באיסוף.",
   },
   "bag.keepBrowsing": {
     en: "Keep browsing",
@@ -403,21 +388,6 @@ export const UI = {
     en: "Decrease {name} quantity",
     ar: "قلّل كمية {name}",
     he: "הקטנת הכמות של {name}",
-  },
-  "bag.codeEmpty": {
-    en: "Enter a code first.",
-    ar: "أدخل رمزًا أولًا.",
-    he: "הזינו קוד תחילה.",
-  },
-  "bag.codeInvalid": {
-    en: "That code isn't valid.",
-    ar: "هذا الرمز غير صالح.",
-    he: "הקוד אינו תקף.",
-  },
-  "bag.codeOk": {
-    en: "{pct}% off applied!",
-    ar: "تم تطبيق خصم {pct}%!",
-    he: "הופעלה הנחה של {pct}%!",
   },
 } satisfies Record<string, Localized>;
 

@@ -8,14 +8,12 @@ import {
   Trash2,
   Truck,
   Store,
-  Tag,
-  Check,
   ShoppingBag,
   Loader2,
   PartyPopper,
 } from "lucide-react";
 import ProductThumb from "./ProductThumb";
-import { useCart, type DiscountResult } from "@/lib/cart-context";
+import { useCart } from "@/lib/cart-context";
 import { formatPrice, getProduct, HERO_PRODUCT_ID, boxLinePrice } from "@/lib/data";
 import { useLanguage } from "@/lib/language-context";
 import type { CartLine } from "@/lib/types";
@@ -33,15 +31,10 @@ export default function CartDrawer() {
     removeLine,
     fulfillment,
     setFulfillment,
-    discountCode,
-    applyDiscount,
-    clearDiscount,
     clearCart,
   } = useCart();
 
   const { t, lang } = useLanguage();
-  const [codeInput, setCodeInput] = useState("");
-  const [codeFeedback, setCodeFeedback] = useState<DiscountResult | null>(null);
   const [checkout, setCheckout] = useState<CheckoutState>("idle");
   const [customerName, setCustomerName] = useState("");
   const [phone, setPhone] = useState("");
@@ -49,11 +42,10 @@ export default function CartDrawer() {
     useState<CustomerFieldError>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
 
-  // Close and reset transient checkout/code UI so the next open is fresh.
+  // Close and reset transient checkout UI so the next open is fresh.
   const handleClose = useCallback(() => {
     closeCart();
     setCheckout("idle");
-    setCodeFeedback(null);
     setCustomerFieldError(null);
   }, [closeCart]);
 
@@ -69,13 +61,6 @@ export default function CartDrawer() {
   }, [isOpen, handleClose]);
 
   const isEmpty = lines.length === 0;
-
-  const handleApplyCode = (e: React.FormEvent) => {
-    e.preventDefault();
-    const result = applyDiscount(codeInput);
-    setCodeFeedback(result);
-    if (result.ok) setCodeInput("");
-  };
 
   const handleCheckout = () => {
     if (isEmpty || checkout === "processing") return;
@@ -99,7 +84,6 @@ export default function CartDrawer() {
           body: JSON.stringify({
             lines,
             fulfillment,
-            discountCode,
             customerName: cleanName,
             phone: cleanPhone,
           }),
@@ -282,71 +266,6 @@ export default function CartDrawer() {
                     />
                   </div>
                 </fieldset>
-
-                {/* Discount */}
-                <form onSubmit={handleApplyCode} className="mt-5 sm:mt-4">
-                  <label
-                    htmlFor="discount"
-                    className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-chocolate sm:mb-1.5"
-                  >
-                    <Tag className="h-4 w-4 text-caramel" />
-                    {t("bag.discount")}
-                  </label>
-                  {discountCode ? (
-                    <div className="flex items-center justify-between rounded-2xl bg-pistachio/15 px-4 py-3 sm:py-2.5">
-                      <span className="flex items-center gap-2 text-sm font-semibold text-pistachio-dark">
-                        <Check className="h-4 w-4" /> {t("bag.codeApplied", { code: discountCode })}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          clearDiscount();
-                          setCodeFeedback(null);
-                        }}
-                        className="text-sm font-semibold text-chocolate/60 underline hover:text-chocolate"
-                      >
-                        {t("bag.remove")}
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="flex gap-2">
-                      <input
-                        id="discount"
-                        type="text"
-                        value={codeInput}
-                        onChange={(e) => setCodeInput(e.target.value)}
-                        placeholder={t("bag.codePlaceholder")}
-                        className="min-w-0 flex-1 rounded-2xl border border-chocolate/15 bg-white px-4 py-3 text-base text-chocolate placeholder:text-chocolate/40 focus:border-caramel focus:outline-none sm:py-2.5 sm:text-sm"
-                        autoComplete="off"
-                      />
-                      <button
-                        type="submit"
-                        className="rounded-2xl bg-chocolate px-4 py-3 text-sm font-semibold text-cream transition-transform hover:-translate-y-0.5 sm:py-2.5"
-                      >
-                        {t("bag.apply")}
-                      </button>
-                    </div>
-                  )}
-                  {codeFeedback && (
-                    <p
-                      role="status"
-                      className={`mt-2 text-sm font-medium ${
-                        codeFeedback.ok ? "text-pistachio-dark" : "text-strawberry"
-                      }`}
-                    >
-                      {codeFeedback.ok
-                        ? t("bag.codeOk", { pct: codeFeedback.pct })
-                        : t(
-                            codeFeedback.reason === "empty"
-                              ? "bag.codeEmpty"
-                              : "bag.codeInvalid",
-                          )}
-                    </p>
-                  )}
-                  <p className="mt-1.5 text-xs text-chocolate/45 sm:mt-1">
-                    {t("bag.demoCodes")}
-                  </p>
-                </form>
               </div>
             </div>
 
@@ -355,13 +274,6 @@ export default function CartDrawer() {
             <footer className="border-t border-chocolate/10 bg-cream-dark/40 px-6 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:py-3.5 sm:pb-3.5">
               <dl className="mb-4 space-y-1.5 text-sm sm:mb-3 sm:grid sm:grid-cols-3 sm:gap-3 sm:space-y-0">
                 <Row label={t("bag.subtotal")} value={totals.subtotal} />
-                {totals.discountAmount > 0 && (
-                  <Row
-                    label={t("bag.discountRow")}
-                    value={-totals.discountAmount}
-                    accent="text-pistachio-dark"
-                  />
-                )}
                 <Row
                   label={
                     fulfillment === "delivery" ? t("bag.delivery") : t("bag.pickup")
@@ -396,7 +308,7 @@ export default function CartDrawer() {
                 )}
               </button>
               <p className="mt-2 text-center text-xs text-chocolate/45 sm:mt-1.5">
-                {t("bag.demoNote")}
+                {t("bag.paymentNote")}
               </p>
             </footer>
           </>

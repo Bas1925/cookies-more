@@ -10,6 +10,7 @@ import {
   getProduct,
 } from "@/lib/data";
 import { appendOrder } from "@/lib/orders-fs";
+import { sendOrderPush } from "@/lib/push";
 import { readCatalogFile } from "@/lib/catalog-fs";
 import type { CartLine, Fulfillment, Order, OrderLine } from "@/lib/types";
 
@@ -173,6 +174,16 @@ export async function POST(request: Request) {
 
   try {
     await appendOrder(order);
+
+    // Awaited on purpose: the serverless function can be frozen the moment it
+    // responds, so a fire-and-forget push would often never leave the box.
+    // A push failure must never fail a paid-for order, hence the catch.
+    try {
+      await sendOrderPush(order);
+    } catch (pushError) {
+      console.error("Order saved but push notification failed", pushError);
+    }
+
     revalidatePath("/admin");
     revalidatePath("/admin/orders");
     return NextResponse.json({ ok: true, order });

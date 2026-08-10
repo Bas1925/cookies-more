@@ -70,6 +70,45 @@ const ADMIN_UI = {
   "notifications.unknownCustomer": { en: "Customer", ar: "عميل" },
   "notifications.view": { en: "View new order", ar: "عرض الطلب الجديد" },
   "notifications.dismiss": { en: "Dismiss notification", ar: "إغلاق التنبيه" },
+  "notifications.panelTitle": { en: "Order alerts", ar: "تنبيهات الطلبات" },
+  "notifications.close": { en: "Close", ar: "إغلاق" },
+  "notifications.statusOn": {
+    en: "This phone will ring for every new order, even when the app is closed.",
+    ar: "سيرن هذا الهاتف عند كل طلب جديد، حتى عندما يكون التطبيق مغلقًا.",
+  },
+  "notifications.statusOff": {
+    en: "Turn on alerts to get a notification the moment an order arrives.",
+    ar: "فعّل التنبيهات لتصلك إشعارات فور وصول أي طلب.",
+  },
+  "notifications.statusBlocked": {
+    en: "Notifications are blocked. Allow them for this app in your device settings, then come back.",
+    ar: "الإشعارات محظورة. اسمح بها لهذا التطبيق من إعدادات جهازك ثم عد إلى هنا.",
+  },
+  "notifications.turnOn": { en: "Turn on alerts", ar: "تفعيل التنبيهات" },
+  "notifications.turnOff": { en: "Turn off alerts", ar: "إيقاف التنبيهات" },
+  "notifications.working": { en: "Just a moment…", ar: "لحظة…" },
+  "notifications.sendTest": { en: "Send a test alert", ar: "إرسال تنبيه تجريبي" },
+  "notifications.testSent": { en: "Test sent ✓", ar: "تم الإرسال ✓" },
+  "notifications.failed": {
+    en: "That did not work. Try again.",
+    ar: "لم تنجح العملية. حاول مرة أخرى.",
+  },
+  "notifications.unsupported": {
+    en: "This browser cannot show order alerts.",
+    ar: "هذا المتصفح لا يدعم تنبيهات الطلبات.",
+  },
+  "notifications.serverOff": {
+    en: "Push keys are missing on the server, so alerts cannot be sent yet.",
+    ar: "مفاتيح الإشعارات غير مضبوطة على الخادم، لذا لا يمكن إرسال التنبيهات بعد.",
+  },
+  "notifications.installTitle": {
+    en: "Add to your Home Screen first",
+    ar: "أضف التطبيق إلى الشاشة الرئيسية أولًا",
+  },
+  "notifications.installIos": {
+    en: "On iPhone, alerts only work from the installed app. Tap Share, choose “Add to Home Screen”, then open the admin from that icon and turn alerts on there.",
+    ar: "على الآيفون، تعمل التنبيهات فقط من التطبيق المثبَّت. اضغط مشاركة، ثم «إضافة إلى الشاشة الرئيسية»، وافتح لوحة الإدارة من تلك الأيقونة وفعّل التنبيهات من هناك.",
+  },
   "login.title": { en: "Admin login", ar: "دخول الإدارة" },
   "login.subtitle": {
     en: "Manage menu, prices, photos, and sales",

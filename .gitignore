@@ -43,3 +43,6 @@ next-env.d.ts
 # Local Netlify folder
 .netlify
 deno.lock
+
+# Local push subscriptions (device endpoints + auth secrets)
+/data/push-subscriptions.json

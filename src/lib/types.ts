@@ -132,3 +132,17 @@ export interface Order {
 export interface OrdersFile {
   orders: Order[];
 }
+
+/**
+ * A browser push subscription belonging to an admin device. Mirrors the shape
+ * of `PushSubscription.toJSON()`, which is what the browser hands us.
+ */
+export interface PushSubscriptionRecord {
+  endpoint: string;
+  expirationTime?: number | null;
+  keys: {
+    p256dh: string;
+    auth: string;
+  };
+  createdAt: string;
+}

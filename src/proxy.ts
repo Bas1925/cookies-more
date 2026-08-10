@@ -46,6 +46,14 @@ async function isAuthed(request: NextRequest) {
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // The admin web manifest must stay readable without a session: iOS re-fetches
+  // it when installing to the Home Screen and later on its own schedule, and a
+  // redirect to the HTML login page reads as a broken manifest — which silently
+  // costs the app its name, icon and standalone launch. It holds no secrets.
+  if (pathname === "/admin/manifest.webmanifest") {
+    return NextResponse.next();
+  }
+
   if (pathname.startsWith("/admin/login")) {
     if (await isAuthed(request)) {
       return NextResponse.redirect(new URL("/admin", request.url));

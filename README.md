@@ -153,6 +153,39 @@ empty. Contact and social proof run through the Instagram grid and the footer
 link. `INSTAGRAM_IDS` in `data.ts` picks the eight tiles; they link to the
 profile, not to individual posts.
 
+## Order notifications on the admin phone
+
+The admin panel can push a notification to a phone the moment an order is
+placed — including when the app is closed. It runs on the Web Push standard,
+so there is no app store and no third-party service.
+
+**Setup, once per deployment:**
+
+1. Generate a key pair: `npx web-push generate-vapid-keys`
+2. Add three environment variables to the host (Netlify → Site configuration →
+   Environment variables), then redeploy:
+   - `NEXT_PUBLIC_VAPID_PUBLIC_KEY`
+   - `VAPID_PRIVATE_KEY` — secret, never commit it
+   - `VAPID_SUBJECT` — e.g. `mailto:you@example.com`
+3. On the phone, open `/admin` in **Safari**, log in, then Share →
+   **Add to Home Screen**.
+4. Open the admin from that new icon, tap the bell, and turn alerts on. There
+   is a "send a test alert" button to confirm it works.
+
+**Why the Home Screen step is not optional on iPhone.** iOS has no Notification
+API in a Safari tab at all — it only exists for an installed web app, from iOS
+16.4 onwards. The panel detects this and shows the install instructions instead
+of a dead "enable" button. Android and desktop can enable alerts directly.
+
+Notifications are shown by `public/sw.js` via `registration.showNotification()`,
+which is the only mechanism iOS supports — the page-level `new Notification()`
+constructor does not exist there. `/api/orders` calls `sendOrderPush` after
+saving an order; subscriptions live in Netlify Blobs (`src/lib/push-subs.ts`)
+and are dropped automatically when a push service reports them expired.
+
+`/admin` ships its own web manifest at `/admin/manifest.webmanifest` so the
+Home Screen icon opens the panel rather than the storefront.
+
 ## Languages
 
 The site ships in **English, Arabic and Hebrew**, switched from the navbar.

@@ -70,18 +70,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <NewOrderNotifier
-              labels={{
-                enable: t("notifications.enable"),
-                enabled: t("notifications.enabled"),
-                blocked: t("notifications.blocked"),
-                newOrder: t("notifications.newOrder"),
-                newOrders: t("notifications.newOrders"),
-                unknownCustomer: t("notifications.unknownCustomer"),
-                view: t("notifications.view"),
-                dismiss: t("notifications.dismiss"),
-              }}
-            />
+            <NewOrderNotifier />
             <AdminLanguageSwitcher />
             <button
               type="button"

@@ -2,7 +2,7 @@ import "server-only";
 
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { Catalog, Category, Product } from "./types";
+import type { Catalog, Category, Product, ReadyBoxAllow } from "./types";
 import { setCatalogSnapshot } from "./catalog-store";
 import { tryGetStore } from "./blob-store";
 import seed from "../../data/catalog.json";
@@ -10,6 +10,34 @@ import seed from "../../data/catalog.json";
 const CATALOG_PATH = path.join(process.cwd(), "data", "catalog.json");
 const STORE_NAME = "catalog";
 const CATALOG_KEY = "catalog";
+
+function normalizeBoxAllow(raw: unknown): ReadyBoxAllow | undefined {
+  if (!raw || typeof raw !== "object") return undefined;
+  const value = raw as ReadyBoxAllow;
+  const hasCategories = Array.isArray(value.categories);
+  const categories = hasCategories
+    ? value.categories.filter((id): id is string => typeof id === "string" && id.length > 0)
+    : undefined;
+  const categoryMax: Record<string, number> = {};
+  if (value.categoryMax && typeof value.categoryMax === "object") {
+    for (const [id, amount] of Object.entries(value.categoryMax)) {
+      const n = Math.floor(Number(amount));
+      if (id && Number.isFinite(n) && n >= 0) categoryMax[id] = n;
+    }
+  }
+  const productMax: Record<string, number> = {};
+  if (value.productMax && typeof value.productMax === "object") {
+    for (const [id, amount] of Object.entries(value.productMax)) {
+      const n = Math.floor(Number(amount));
+      if (id && Number.isFinite(n) && n >= 0) productMax[id] = n;
+    }
+  }
+  const allow: ReadyBoxAllow = {};
+  if (hasCategories) allow.categories = categories;
+  if (Object.keys(categoryMax).length > 0) allow.categoryMax = categoryMax;
+  if (Object.keys(productMax).length > 0) allow.productMax = productMax;
+  return Object.keys(allow).length > 0 ? allow : undefined;
+}
 
 function isLocalized(value: unknown): boolean {
   if (!value || typeof value !== "object") return false;
@@ -40,6 +68,7 @@ function normalizeCatalog(raw: unknown): Catalog {
       name: c.name,
       blurb: c.blurb,
       hidden: Boolean(c.hidden),
+      boxPick: c.boxPick === false ? false : undefined,
     };
   });
 
@@ -55,6 +84,8 @@ function normalizeCatalog(raw: unknown): Catalog {
       price: Number(p.price),
       accent: p.accent || "#964534",
       hidden: Boolean(p.hidden),
+      boxPick: p.boxPick === false ? false : undefined,
+      boxAllow: normalizeBoxAllow(p.boxAllow),
       fillable: Boolean(p.fillable) || undefined,
       slots: p.slots ? Number(p.slots) : undefined,
       boxExtra: p.boxExtra ? Number(p.boxExtra) : undefined,

@@ -1,5 +1,6 @@
 "use client";
 
+import type { Ref } from "react";
 import type { Localized } from "@/lib/types";
 import { useAdminLanguage } from "@/lib/admin-language-context";
 import type { AdminKey } from "@/lib/admin-i18n";
@@ -15,17 +16,19 @@ export default function LocalizedFields({
   value,
   onChange,
   multiline,
+  firstInputRef,
 }: {
   label: string;
   value: Localized;
   onChange: (next: Localized) => void;
   multiline?: boolean;
+  firstInputRef?: Ref<HTMLInputElement>;
 }) {
   const { t } = useAdminLanguage();
   return (
     <fieldset className="space-y-2">
       <legend className="text-sm font-semibold text-[#964534]">{label}</legend>
-      {LANGS.map((lang) => (
+      {LANGS.map((lang, index) => (
         <label key={lang.key} className="block text-xs font-semibold text-[#4a2218]/70">
           {t(lang.label)}
           {multiline ? (
@@ -40,6 +43,7 @@ export default function LocalizedFields({
             />
           ) : (
             <input
+              ref={index === 0 ? firstInputRef : undefined}
               value={value[lang.key]}
               onChange={(e) =>
                 onChange({ ...value, [lang.key]: e.target.value })

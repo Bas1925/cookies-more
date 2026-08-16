@@ -13,6 +13,7 @@ import type { Catalog, Category, CategoryId, Product } from "./types";
 import {
   getBoxes,
   getBoxFillings,
+  getReadyBoxFillings,
   getCategories,
   getProduct,
   productsInCategory,
@@ -26,6 +27,7 @@ interface CatalogContextValue {
   products: Product[];
   boxes: Product[];
   boxFillings: Product[];
+  readyBoxFillings: Product[];
   ready: boolean;
   refresh: () => Promise<void>;
   getProduct: (id: string) => Product | undefined;
@@ -79,6 +81,7 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
       products: catalog.products,
       boxes: getBoxes(),
       boxFillings: getBoxFillings(),
+      readyBoxFillings: getReadyBoxFillings(),
       ready,
       refresh,
       getProduct,

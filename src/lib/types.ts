@@ -13,6 +13,11 @@ export interface Category {
   blurb: Localized;
   /** When true, the category is hidden from the public shop. */
   hidden?: boolean;
+  /**
+   * When false, this category is omitted from the ready-made box picker.
+   * Omitted / true means customers can pick from it.
+   */
+  boxPick?: boolean;
 }
 
 export interface Product {
@@ -32,7 +37,10 @@ export interface Product {
   objectPosition?: string;
   /** Accent color — themes the fallback tile when there is no photo. */
   accent: string;
-  /** How many cookies fit in this box (fillable boxes only). */
+  /**
+   * Fillable boxes: how many cookies fit. Ready-made boxes: how many
+   * distinct flavors the customer can check in the picker.
+   */
   slots?: number;
   /**
    * Extra shekels charged per piece when this cookie is packed into a box
@@ -46,6 +54,32 @@ export interface Product {
   fillable?: boolean;
   /** When true, the product is hidden from the public shop. */
   hidden?: boolean;
+  /**
+   * When false, this item is omitted from the ready-made box picker.
+   * Omitted / true means customers can check it.
+   */
+  boxPick?: boolean;
+  /**
+   * Ready-made boxes only: which categories this box accepts,
+   * how many pieces from each category, and which products are offered.
+   */
+  boxAllow?: ReadyBoxAllow;
+}
+
+/** Rules for one ready-made box size. */
+export interface ReadyBoxAllow {
+  /** Category ids allowed in this box. Omitted means every pickable category. */
+  categories?: string[];
+  /**
+   * Max pieces from a category in this box.
+   * Example: `{ cakes: 2 }` — customer can pick at most two cakes.
+   */
+  categoryMax?: Record<string, number>;
+  /**
+   * Per-product offer. `0` hides the item from this box.
+   * Missing key = offered.
+   */
+  productMax?: Record<string, number>;
 }
 
 export interface Catalog {

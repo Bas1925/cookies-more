@@ -349,7 +349,11 @@ function CartLineRow({
       .filter(([, n]) => n > 0)
       .map(([id, n]) => {
         const product = getProduct(id);
-        return product ? `${n}× ${L(product.name)}` : null;
+        return product
+          ? n === 1
+            ? L(product.name)
+            : `${n}× ${L(product.name)}`
+          : null;
       })
       .filter((part): part is string => part !== null);
     return {

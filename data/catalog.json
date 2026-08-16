@@ -8,9 +8,9 @@
         "he": "קופסאות"
       },
       "blurb": {
-        "en": "Ready-made boxes we pack for you. Want to choose every cookie? Build your own below.",
-        "ar": "صناديق جاهزة نجهّزها لك. هل تريد اختيار كل قطعة كوكيز؟ جهّز صندوقك أدناه.",
-        "he": "קופסאות מוכנות שאנחנו מארזים בשבילכם. רוצים לבחור כל עוגייה? בונים קופסה למטה."
+        "en": "Tap a box, check the items you want, and we pack it. Want every cookie counted? Build your own below.",
+        "ar": "اضغط على الصندوق، اختر الأصناف، ونحن نجهّزه. هل تريد اختيار كل قطعة؟ جهّز صندوقك أدناه.",
+        "he": "לוחצים על קופסה, מסמנים פריטים, ואנחנו אורזים. רוצים לבחור כל עוגייה? בונים קופסה למטה."
       },
       "hidden": false
     },
@@ -96,15 +96,16 @@
         "he": "קופסה קטנה"
       },
       "price": 80,
+      "slots": 3,
       "tagline": {
-        "en": "Ready-made small box",
-        "ar": "صندوق جاهز صغير",
-        "he": "קופסה קטנה מוכנה"
+        "en": "Check 3 items",
+        "ar": "اختر 3 أصناف",
+        "he": "סמנו 3 פריטים"
       },
       "description": {
-        "en": "A ready-made box we pack for you — no picking needed. Perfect as a little gift.",
-        "ar": "صندوق جاهز نجهّزه لكم — بدون اختيار. مثالي كهدية صغيرة.",
-        "he": "קופסה מוכנה שאנחנו מארזים בשבילכם — בלי לבחור. מושלמת למתנה קטנה."
+        "en": "A small ready-made box — check 3 items and we pack it. Perfect as a little gift.",
+        "ar": "صندوق جاهز صغير — اختر 3 أصناف ونحن نجهّزه. مثالي كهدية صغيرة.",
+        "he": "קופסה קטנה מוכנה — סמנו 3 פריטים ואנחנו אורזים. מושלמת למתנה קטנה."
       },
       "accent": "#a3714a",
       "hidden": false
@@ -119,15 +120,16 @@
         "he": "קופסה בינונית"
       },
       "price": 100,
+      "slots": 5,
       "tagline": {
-        "en": "Ready-made medium box",
-        "ar": "صندوق جاهز متوسط",
-        "he": "קופסה בינונית מוכנה"
+        "en": "Check 5 items",
+        "ar": "اختر 5 أصناف",
+        "he": "סמנו 5 פריטים"
       },
       "description": {
-        "en": "A ready-made assortment we build in the kitchen — enough to share around the table.",
-        "ar": "تشكيلة جاهزة نبنيها في المطبخ — تكفي للمشاركة حول الطاولة.",
-        "he": "מבחר מוכן שאנחנו מרכיבים במטבח — מספיק לחלוק סביב השולחן."
+        "en": "A medium ready-made box — check 5 items, enough to share around the table.",
+        "ar": "صندوق جاهز متوسط — اختر 5 أصناف، يكفي للمشاركة حول الطاولة.",
+        "he": "קופסה בינונית מוכנה — סמנו 5 פריטים, מספיק לחלוק סביב השולחן."
       },
       "accent": "#8a5a3a",
       "hidden": false
@@ -142,15 +144,16 @@
         "he": "קופסת חגיגה"
       },
       "price": 130,
+      "slots": 7,
       "tagline": {
-        "en": "Our large ready mix",
-        "ar": "تشكيلتنا الكبيرة الجاهزة",
-        "he": "המיקס הגדול המוכן שלנו"
+        "en": "Check 7 items",
+        "ar": "اختر 7 أصناف",
+        "he": "סמנו 7 פריטים"
       },
       "description": {
-        "en": "The full ready-made spread — packed by us for parties, offices, and big thank-yous.",
-        "ar": "التشكيلة الكاملة الجاهزة — نجهّزها للحفلات والمكاتب والهدايا الكبيرة.",
-        "he": "המבחר המלא המוכן — ארוז אצלנו למסיבות, משרדים ותודות גדולות."
+        "en": "The celebration box — check 7 items. Packed by us for parties, offices, and big thank-yous.",
+        "ar": "صندوق الاحتفال — اختر 7 أصناف. نجهّزه للحفلات والمكاتب والهدايا الكبيرة.",
+        "he": "קופסת החגיגה — סמנו 7 פריטים. ארוזה אצלנו למסיבות, משרדים ותודות גדולות."
       },
       "accent": "#7a4a2e",
       "hidden": false

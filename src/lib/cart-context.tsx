@@ -10,7 +10,12 @@ import {
   type ReactNode,
 } from "react";
 import type { CartLine, Fulfillment } from "./types";
-import { DELIVERY_FEE, getProduct, boxLinePrice } from "./data";
+import {
+  DELIVERY_FEE,
+  getProduct,
+  boxLinePrice,
+  isCustomizableReadyBox,
+} from "./data";
 import { lockScroll, unlockScroll } from "./scroll-lock";
 
 // v2: the menu moved from the demo flavors to the real catalogue, so any
@@ -60,9 +65,8 @@ function pruneLines(lines: CartLine[]): CartLine[] {
     if (!line || typeof line !== "object") return false;
     if (line.kind === "item") return Boolean(getProduct(line.productId));
     if (line.kind === "box") {
-      // Only fill-your-own boxes belong in box lines; ready-made boxes are items.
       const box = getProduct(line.boxId);
-      return Boolean(box?.fillable);
+      return Boolean(box?.fillable || isCustomizableReadyBox(box));
     }
     return false;
   });

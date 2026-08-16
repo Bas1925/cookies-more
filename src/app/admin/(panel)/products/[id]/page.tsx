@@ -72,9 +72,14 @@ export default function AdminProductEditorPage() {
         ? product.description
         : undefined,
       fillable: product.fillable || undefined,
-      slots: product.fillable ? Number(product.slots) || 6 : undefined,
+      slots: product.fillable
+        ? Number(product.slots) || 6
+        : product.category === "boxes" && product.slots
+          ? Number(product.slots)
+          : undefined,
       boxExtra: product.boxExtra ? Number(product.boxExtra) : undefined,
       hidden: product.hidden || undefined,
+      boxPick: product.boxPick === false ? false : undefined,
     };
 
     const products = isNew
@@ -269,6 +274,22 @@ export default function AdminProductEditorPage() {
               {t("editor.hidden")}
             </label>
 
+            {!product.fillable && product.category !== "boxes" && (
+              <label className="flex items-center gap-2 text-sm font-semibold">
+                <input
+                  type="checkbox"
+                  checked={product.boxPick !== false}
+                  onChange={(e) =>
+                    setProduct({
+                      ...product,
+                      boxPick: e.target.checked ? undefined : false,
+                    })
+                  }
+                />
+                {t("editor.boxPick")}
+              </label>
+            )}
+
             <label className="flex items-center gap-2 text-sm font-semibold">
               <input
                 type="checkbox"
@@ -277,20 +298,25 @@ export default function AdminProductEditorPage() {
                   setProduct({
                     ...product,
                     fillable: e.target.checked,
-                    slots: e.target.checked ? product.slots || 6 : undefined,
+                    slots: e.target.checked
+                      ? product.slots || 6
+                      : product.category === "boxes"
+                        ? product.slots || 3
+                        : undefined,
                   })
                 }
               />
               {t("editor.fillable")}
             </label>
 
-            {product.fillable && (
+            {(product.fillable ||
+              (product.category === "boxes" && !product.fillable)) && (
               <label className="block text-sm font-semibold">
-                {t("editor.slots")}
+                {product.fillable ? t("editor.slots") : t("editor.picks")}
                 <input
                   type="number"
                   min={1}
-                  value={product.slots ?? 6}
+                  value={product.slots ?? (product.fillable ? 6 : 3)}
                   onChange={(e) =>
                     setProduct({ ...product, slots: Number(e.target.value) })
                   }

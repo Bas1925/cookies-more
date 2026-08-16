@@ -15,6 +15,7 @@ const NAV: Array<{ href: string; label: AdminKey; exact?: boolean }> = [
   { href: "/admin/orders", label: "shell.orders" },
   { href: "/admin/products", label: "shell.products" },
   { href: "/admin/categories", label: "shell.categories" },
+  { href: "/admin/box-picks", label: "shell.boxPicks" },
 ];
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {

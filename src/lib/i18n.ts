@@ -125,6 +125,73 @@ export const UI = {
     ar: "أضف {name} إلى السلة",
     he: "הוספת {name} לסל",
   },
+  "readyBox.choose": {
+    en: "Choose items",
+    ar: "اختر الأصناف",
+    he: "בחירת פריטים",
+  },
+  "readyBox.chooseShort": { en: "Choose", ar: "اختر", he: "בחרו" },
+  "readyBox.chooseNamed": {
+    en: "Choose items for {name}",
+    ar: "اختر أصناف {name}",
+    he: "בחירת פריטים ל{name}",
+  },
+  "readyBox.picksHint": {
+    en: "Pick {count} items",
+    ar: "اختر {count} أصناف",
+    he: "בחרו {count} פריטים",
+  },
+  "readyBox.cardRule": {
+    en: "{name} {count}",
+    ar: "{name} {count}",
+    he: "{name} {count}",
+  },
+  "readyBox.title": {
+    en: "What's inside?",
+    ar: "ماذا تريد في الصندوق؟",
+    he: "מה שמים בפנים?",
+  },
+  "readyBox.sub": {
+    en: "Fill the {name} with {count} items. Limits below are what this shop allows.",
+    ar: "املأ {name} بـ {count} أصناف. الحدود أدناه هي ما يسمح به المتجر.",
+    he: "מלאו את {name} ב-{count} פריטים. המגבלות למטה הן מה שהחנות מאפשרת.",
+  },
+  "readyBox.rules": {
+    en: "What you can add",
+    ar: "ما يمكنك إضافته",
+    he: "מה אפשר להוסיף",
+  },
+  "readyBox.picked": {
+    en: "{count} of {capacity} selected",
+    ar: "{count} من {capacity} مختارة",
+    he: "{count} מתוך {capacity} נבחרו",
+  },
+  "readyBox.need": {
+    en: "Add {count} more",
+    ar: "أضف {count} أخرى",
+    he: "הוסיפו עוד {count}",
+  },
+  "readyBox.full": {
+    en: "Box is full — remove one to swap",
+    ar: "الصندوق ممتלئ — أزل صنفاً للتبديل",
+    he: "הקופסה מלאה — הסירו פריט כדי להחליף",
+  },
+  "readyBox.maxOf": {
+    en: "Up to {count} from {name}",
+    ar: "حتى {count} من {name}",
+    he: "עד {count} מ{name}",
+  },
+  "readyBox.categoryFull": {
+    en: "That's all you can pick from {name}",
+    ar: "هذا كل ما يمكن اختياره من {name}",
+    he: "זה כל מה שאפשר לבחור מ{name}",
+  },
+  "readyBox.close": { en: "Close", ar: "إغلاق", he: "סגירה" },
+  "readyBox.include": {
+    en: "Include {name}",
+    ar: "أضف {name}",
+    he: "הוספת {name}",
+  },
 
   // ── Build a box ──────────────────────────────────────────────────────
   "box.eyebrow": { en: "Build a box", ar: "جهّز صندوقك", he: "בניית קופסה" },

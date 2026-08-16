@@ -6,7 +6,12 @@ import {
   boxCapacity,
   DELIVERY_FEE,
   getBoxFillings,
+  getReadyBoxFillings,
   getProduct,
+  isCustomizableReadyBox,
+  readyBoxPicks,
+  readyBoxCategoryMax,
+  readyBoxProductMax,
 } from "@/lib/data";
 import { appendOrder } from "@/lib/orders-fs";
 import { sendOrderPush } from "@/lib/push";
@@ -52,7 +57,9 @@ function buildOrderLines(lines: CartLine[]): OrderLine[] | null {
 
     if (line.kind === "box") {
       const box = getProduct(line.boxId);
-      if (!box?.fillable || box.hidden) return null;
+      if (!box || box.hidden) return null;
+      const readyMade = isCustomizableReadyBox(box);
+      if (!box.fillable && !readyMade) return null;
       if (
         !line.contents ||
         typeof line.contents !== "object" ||
@@ -61,16 +68,22 @@ function buildOrderLines(lines: CartLine[]): OrderLine[] | null {
         return null;
       }
 
-      const allowed = new Map(getBoxFillings().map((product) => [product.id, product]));
+      const allowed = new Map(
+        (readyMade ? getReadyBoxFillings(box) : getBoxFillings()).map(
+          (product) => [product.id, product],
+        ),
+      );
       const contents: Record<string, number> = {};
       const contentDetails: NonNullable<OrderLine["contentDetails"]> = [];
       let selectedCount = 0;
+      const capacity = readyMade ? readyBoxPicks(box) : boxCapacity(box.id);
 
       for (const [productId, qty] of Object.entries(line.contents)) {
         const product = allowed.get(productId);
         if (!product || !Number.isInteger(qty) || qty < 1) return null;
+        if (readyMade && qty > readyBoxProductMax(box, product)) return null;
         selectedCount += qty;
-        if (selectedCount > boxCapacity(box.id)) return null;
+        if (selectedCount > capacity) return null;
         contents[productId] = qty;
         contentDetails.push({
           productId,
@@ -79,7 +92,20 @@ function buildOrderLines(lines: CartLine[]): OrderLine[] | null {
         });
       }
 
-      if (selectedCount !== boxCapacity(box.id)) return null;
+      if (selectedCount !== capacity) return null;
+
+      if (readyMade) {
+        const byCategory: Record<string, number> = {};
+        for (const [productId, qty] of Object.entries(contents)) {
+          const product = allowed.get(productId);
+          if (!product) return null;
+          byCategory[product.category] =
+            (byCategory[product.category] ?? 0) + qty;
+        }
+        for (const [categoryId, qty] of Object.entries(byCategory)) {
+          if (qty > readyBoxCategoryMax(box, categoryId)) return null;
+        }
+      }
 
       const unitPrice = boxLinePrice(line.boxId, contents);
       result.push({

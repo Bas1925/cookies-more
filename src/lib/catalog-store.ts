@@ -82,16 +82,49 @@ export function readyBoxCategoryRules(box: Product): Array<{
 /** A category the admin allowed but never numbered still holds one piece. */
 const DEFAULT_CATEGORY_MAX = 1;
 
+/** Box totals from before sizes were per-category. Only for unnumbered boxes. */
+const LEGACY_READY_BOX_PICKS: Record<string, number> = {
+  "box-small": 3,
+  "box-medium": 5,
+  "box-large": 7,
+};
+
+/**
+ * Never offered in a box the admin has not numbered: one whole cake costs more
+ * than the box it would sit in, so it must be opted into deliberately.
+ */
+const UNNUMBERED_EXCLUDED_CATEGORIES = new Set(["cakes"]);
+
+/** True once the admin has given this box at least one category number. */
+function hasCategoryNumbers(box: Product): boolean {
+  const numbers = box.boxAllow?.categoryMax;
+  return Boolean(numbers && Object.keys(numbers).length > 0);
+}
+
+/** The box's old single total, for a box that predates per-category sizes. */
+function legacyPicks(box: Product): number {
+  if (box.slots && box.slots > 0) return box.slots;
+  return LEGACY_READY_BOX_PICKS[box.id] ?? 0;
+}
+
 /**
  * How many pieces from this category one ready-made box may hold. This is the
  * box's defining setting: the sizes add up to the box's total, so "Small Box"
  * means 2 cookies + 2 mini cakes + 1 treat rather than "any 3 items".
+ *
+ * A box with no numbers at all keeps its old behaviour — any mix up to the old
+ * total — rather than silently becoming one-of-everything. A live catalogue
+ * stored before this change has no numbers, and treating that as "1 from each
+ * category" put a ₪150 cake inside an ₪80 box.
  */
 export function readyBoxCategoryMax(box: Product, categoryId: string): number {
   if (!isBoxCategoryAllowed(box, categoryId)) return 0;
   const override = box.boxAllow?.categoryMax?.[categoryId];
   if (typeof override === "number" && override >= 0) {
     return Math.min(99, Math.floor(override));
+  }
+  if (!hasCategoryNumbers(box)) {
+    return UNNUMBERED_EXCLUDED_CATEGORIES.has(categoryId) ? 0 : legacyPicks(box);
   }
   return DEFAULT_CATEGORY_MAX;
 }
@@ -133,6 +166,9 @@ export function isReadyMadeBox(product: Product | undefined): boolean {
  */
 export function readyBoxPicks(product: Product): number {
   if (!isReadyMadeBox(product)) return 0;
+  // An unnumbered box keeps its old single total rather than summing a
+  // per-category default it never opted into.
+  if (!hasCategoryNumbers(product)) return legacyPicks(product);
   return readyBoxCategoryRules(product).reduce(
     (sum, rule) => sum + rule.max,
     0,

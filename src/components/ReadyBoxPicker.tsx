@@ -57,6 +57,14 @@ export default function ReadyBoxPicker({
     [categories, fillings],
   );
   const rules = useMemo(() => readyBoxCategoryRules(box), [box, fillings]);
+  // One thumbnail per piece, in menu order, so the strip mirrors the box.
+  const picked = useMemo(
+    () =>
+      fillings.flatMap((product) =>
+        Array.from({ length: contents[product.id] ?? 0 }, () => product),
+      ),
+    [fillings, contents],
+  );
 
   useEffect(() => {
     lockScroll();
@@ -119,9 +127,9 @@ export default function ReadyBoxPicker({
         role="dialog"
         aria-modal="true"
         aria-labelledby="ready-box-title"
-        className="absolute inset-x-0 bottom-0 flex max-h-[92dvh] flex-col overflow-hidden rounded-t-[2rem] bg-cream shadow-2xl sm:inset-0 sm:m-auto sm:h-auto sm:max-h-[min(40rem,88dvh)] sm:w-full sm:max-w-lg sm:rounded-[2rem]"
+        className="absolute inset-x-0 bottom-0 flex max-h-[92dvh] flex-col overflow-hidden rounded-t-[2rem] bg-cream shadow-2xl sm:inset-0 sm:m-auto sm:h-auto sm:max-h-[min(46rem,90dvh)] sm:w-full sm:max-w-lg sm:rounded-[2rem] lg:max-h-[min(52rem,92dvh)] lg:max-w-4xl"
       >
-        <header className="shrink-0 border-b border-chocolate/10 px-5 pb-4 pt-5 sm:px-6">
+        <header className="shrink-0 border-b border-chocolate/10 px-5 pb-4 pt-5 sm:px-6 sm:pb-3 sm:pt-4">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <p className="text-xs font-bold uppercase tracking-[0.16em] text-brick">
@@ -134,7 +142,10 @@ export default function ReadyBoxPicker({
                 {t("readyBox.title")}
               </h2>
               <p className="mt-1 text-sm text-chocolate/60">
-                {t("readyBox.sub", { count: capacity, name })}
+                {t(rules.length > 0 ? "readyBox.sub" : "readyBox.subPlain", {
+                  count: capacity,
+                  name,
+                })}
               </p>
               {rules.length > 0 && (
                 <ul
@@ -170,30 +181,6 @@ export default function ReadyBoxPicker({
             </button>
           </div>
 
-          <div className="mt-4 flex items-center justify-between gap-3 text-sm">
-            <span className="font-semibold text-chocolate" aria-live="polite">
-              {t("readyBox.picked", {
-                count: selectedCount,
-                capacity,
-              })}
-            </span>
-            <span className="font-display text-lg font-semibold text-caramel">
-              {formatPrice(box.price)}
-            </span>
-          </div>
-          <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-chocolate/10">
-            <div
-              className="h-full rounded-full bg-brick transition-[width] duration-300"
-              style={{
-                width: `${Math.min(100, (selectedCount / Math.max(1, capacity)) * 100)}%`,
-              }}
-            />
-          </div>
-          {isFull && (
-            <p className="mt-2 text-xs font-semibold text-chocolate/55">
-              {t("readyBox.full")}
-            </p>
-          )}
         </header>
 
         <div className="min-h-0 flex-1 space-y-5 overflow-y-auto overscroll-contain px-5 py-4 sm:px-6">
@@ -208,6 +195,8 @@ export default function ReadyBoxPicker({
                 className="mb-2 flex flex-wrap items-baseline justify-between gap-2 font-display text-sm font-semibold text-brick"
               >
                 <span>{L(category.name)}</span>
+                {/* The admin sets this per category, so it always shows here —
+                    beside the items it governs, not stacked in the header. */}
                 <span className="font-sans text-xs font-semibold text-chocolate/55">
                   {t("readyBox.maxOf", {
                     count: categoryMax,
@@ -220,7 +209,9 @@ export default function ReadyBoxPicker({
                   {t("readyBox.categoryFull", { name: L(category.name) })}
                 </p>
               )}
-              <ul className="space-y-2">
+              {/* Two columns once there is room — a 512px column on a wide
+                  desktop meant four visible items and five screens of scroll. */}
+              <ul className="space-y-2 lg:grid lg:grid-cols-2 lg:gap-2 lg:space-y-0">
                 {items.map((product) => {
                   const qty = contents[product.id] ?? 0;
                   const canAdd = remaining > 0 && !categoryFull;
@@ -293,12 +284,49 @@ export default function ReadyBoxPicker({
           })}
         </div>
 
+        {/* Live box summary, sitting with the button it gates — the same
+            shape as the Build a Box bar. */}
         <footer className="shrink-0 border-t border-chocolate/10 bg-cream px-5 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-6">
+          <div className="flex items-baseline justify-between gap-2 text-sm">
+            <span className="font-semibold text-chocolate" aria-live="polite">
+              {isFull
+                ? t("readyBox.full")
+                : t("readyBox.picked", { count: selectedCount, capacity })}
+            </span>
+            <span className="font-display text-lg font-semibold text-caramel">
+              {formatPrice(box.price)}
+            </span>
+          </div>
+
+          <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-chocolate/10">
+            <div
+              className="h-full rounded-full bg-brick transition-[width] duration-300"
+              style={{
+                width: `${Math.min(100, (selectedCount / Math.max(1, capacity)) * 100)}%`,
+              }}
+            />
+          </div>
+
+          {picked.length > 0 && (
+            <ul className="mt-2 flex flex-wrap gap-1" aria-label={t("readyBox.inBox")}>
+              {picked.slice(0, 12).map((product, i) => (
+                <li key={`${product.id}-${i}`}>
+                  <ProductThumb
+                    product={product}
+                    className="h-7 w-7"
+                    rounded="rounded-md"
+                    sizes="28px"
+                  />
+                </li>
+              ))}
+            </ul>
+          )}
+
           <button
             type="button"
             onClick={handleAdd}
             disabled={!isFull}
-            className={`flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-semibold transition-all duration-200 ${
+            className={`mt-3 flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-semibold transition-all duration-200 ${
               justAdded
                 ? "bg-pistachio text-cream"
                 : isFull

@@ -156,10 +156,21 @@ export const UI = {
     ar: "املأ {name} بـ {count} أصناف. الحدود أدناه هي ما يسمح به المتجر.",
     he: "מלאו את {name} ב-{count} פריטים. המגבלות למטה הן מה שהחנות מאפשרת.",
   },
+  // Used when no category limit actually binds, so there is nothing "below".
+  "readyBox.subPlain": {
+    en: "Fill the {name} with {count} items.",
+    ar: "املأ {name} بـ {count} أصناف.",
+    he: "מלאו את {name} ב-{count} פריטים.",
+  },
   "readyBox.rules": {
     en: "What you can add",
     ar: "ما يمكنك إضافته",
     he: "מה אפשר להוסיף",
+  },
+  "readyBox.inBox": {
+    en: "In your box",
+    ar: "في صندوقك",
+    he: "בקופסה שלכם",
   },
   "readyBox.picked": {
     en: "{count} of {capacity} selected",
@@ -173,7 +184,7 @@ export const UI = {
   },
   "readyBox.full": {
     en: "Box is full — remove one to swap",
-    ar: "الصندوق ممتלئ — أزل صنفاً للتبديل",
+    ar: "الصندوق ممتلئ — أزل صنفاً للتبديل",
     he: "הקופסה מלאה — הסירו פריט כדי להחליף",
   },
   "readyBox.maxOf": {

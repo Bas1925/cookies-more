@@ -1,17 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import { ShoppingBag, Menu, X } from "lucide-react";
 import Logo from "./Logo";
 import LanguageSwitcher from "./LanguageSwitcher";
-import { NAV_LINKS } from "@/lib/data";
+import { NAV_LINKS, shopSectionHref } from "@/lib/data";
 import { useCart } from "@/lib/cart-context";
 import { useLanguage } from "@/lib/language-context";
 import { lockScroll, unlockScroll } from "@/lib/scroll-lock";
 
 export default function Navbar() {
-  const pathname = usePathname();
   const { openCart, totals, isHydrated } = useCart();
   const { t } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
@@ -39,8 +37,6 @@ export default function Navbar() {
   }, [menuOpen]);
 
   const bagCount = isHydrated ? totals.count : 0;
-  const homeHref = pathname === "/" ? "#top" : "/#top";
-  const sectionHref = (href: string) => (pathname === "/" ? href : `/${href}`);
 
   return (
     <>
@@ -55,7 +51,7 @@ export default function Navbar() {
           className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8"
           aria-label="Primary"
         >
-          <a href={homeHref} className="rounded-lg" aria-label={t("nav.home")}>
+          <a href="/#top" className="rounded-lg" aria-label={t("nav.home")}>
             <Logo />
           </a>
 
@@ -63,7 +59,7 @@ export default function Navbar() {
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
                 <a
-                  href={sectionHref(link.href)}
+                  href={shopSectionHref(link.href)}
                   className="group relative text-sm font-semibold text-chocolate/80 transition-colors hover:text-chocolate"
                 >
                   {t(`nav.${link.key}` as const)}
@@ -152,7 +148,7 @@ export default function Navbar() {
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
                 <a
-                  href={sectionHref(link.href)}
+                  href={shopSectionHref(link.href)}
                   onClick={() => setMenuOpen(false)}
                   className="block rounded-2xl bg-white px-4 py-3.5 font-display text-xl font-semibold text-[#4a2218] shadow-sm ring-1 ring-[#964534]/15 transition-colors hover:bg-[#e8d4bc]"
                   tabIndex={menuOpen ? 0 : -1}

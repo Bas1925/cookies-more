@@ -1,17 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Camera, Clock, MapPin } from "lucide-react";
 import Logo from "../Logo";
-import { NAV_LINKS, STORE } from "@/lib/data";
+import { NAV_LINKS, STORE, shopSectionHref } from "@/lib/data";
 import { useLanguage } from "@/lib/language-context";
 
 export default function Footer() {
-  const pathname = usePathname();
   const { t, L } = useLanguage();
   const year = new Date().getFullYear();
-  const sectionHref = (href: string) => (pathname === "/" ? href : `/${href}`);
 
   return (
     <footer className="bg-brick px-5 pb-8 pt-16 text-cream md:px-8">
@@ -49,7 +46,7 @@ export default function Footer() {
               {NAV_LINKS.map((link) => (
                 <li key={link.href}>
                   <a
-                    href={sectionHref(link.href)}
+                    href={shopSectionHref(link.href)}
                     className="flex min-h-11 items-center text-cream/60 transition-colors hover:text-cream"
                   >
                     {t(`nav.${link.key}` as const)}

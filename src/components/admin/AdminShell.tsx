@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useId, useState, useSyncExternalStore } from "react";
+import { useId, useState } from "react";
 import { Menu, X } from "lucide-react";
 import Logo from "@/components/Logo";
 import AdminLanguageSwitcher from "./AdminLanguageSwitcher";
@@ -25,27 +25,14 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   const [menuOpen, setMenuOpen] = useState(false);
   const navId = useId();
 
-  /**
-   * "Have we hydrated yet" — false during the server render, true on the
-   * client. useSyncExternalStore rather than setState-in-an-effect, which
-   * triggers a cascading re-render (and trips react-hooks lint).
-   */
-  const navReady = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
-
   const logout = async () => {
     await fetch("/api/admin/logout", { method: "POST" });
     router.push("/admin/login");
     router.refresh();
   };
 
-  const isActive = (item: (typeof NAV)[number]) => {
-    if (!navReady) return false;
-    return item.exact ? pathname === item.href : pathname.startsWith(item.href);
-  };
+  const isActive = (item: (typeof NAV)[number]) =>
+    item.exact ? pathname === item.href : pathname.startsWith(item.href);
 
   return (
     <div

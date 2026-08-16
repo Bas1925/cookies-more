@@ -14,8 +14,9 @@ const CATALOG_KEY = "catalog";
 function normalizeBoxAllow(raw: unknown): ReadyBoxAllow | undefined {
   if (!raw || typeof raw !== "object") return undefined;
   const value = raw as ReadyBoxAllow;
-  const hasCategories = Array.isArray(value.categories);
-  const categories = hasCategories
+  // Narrowed inline: a separate `hasCategories` boolean does not tell the
+  // compiler that value.categories is an array on the next line.
+  const categories = Array.isArray(value.categories)
     ? value.categories.filter((id): id is string => typeof id === "string" && id.length > 0)
     : undefined;
   const categoryMax: Record<string, number> = {};
@@ -33,7 +34,7 @@ function normalizeBoxAllow(raw: unknown): ReadyBoxAllow | undefined {
     }
   }
   const allow: ReadyBoxAllow = {};
-  if (hasCategories) allow.categories = categories;
+  if (categories) allow.categories = categories;
   if (Object.keys(categoryMax).length > 0) allow.categoryMax = categoryMax;
   if (Object.keys(productMax).length > 0) allow.productMax = productMax;
   return Object.keys(allow).length > 0 ? allow : undefined;

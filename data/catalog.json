@@ -96,7 +96,6 @@
         "he": "קופסה קטנה"
       },
       "price": 80,
-      "slots": 3,
       "tagline": {
         "en": "Check 3 items",
         "ar": "اختر 3 أصناف",
@@ -108,7 +107,19 @@
         "he": "קופסה קטנה מוכנה — סמנו 3 פריטים ואנחנו אורזים. מושלמת למתנה קטנה."
       },
       "accent": "#a3714a",
-      "hidden": false
+      "hidden": false,
+      "boxAllow": {
+        "categories": [
+          "cookies",
+          "mini-cakes",
+          "treats"
+        ],
+        "categoryMax": {
+          "cookies": 2,
+          "mini-cakes": 2,
+          "treats": 1
+        }
+      }
     },
     {
       "image": "/menu/box-medium.jpeg",
@@ -120,7 +131,6 @@
         "he": "קופסה בינונית"
       },
       "price": 100,
-      "slots": 5,
       "tagline": {
         "en": "Check 5 items",
         "ar": "اختر 5 أصناف",
@@ -132,7 +142,19 @@
         "he": "קופסה בינונית מוכנה — סמנו 5 פריטים, מספיק לחלוק סביב השולחן."
       },
       "accent": "#8a5a3a",
-      "hidden": false
+      "hidden": false,
+      "boxAllow": {
+        "categories": [
+          "cookies",
+          "mini-cakes",
+          "treats"
+        ],
+        "categoryMax": {
+          "cookies": 3,
+          "mini-cakes": 3,
+          "treats": 1
+        }
+      }
     },
     {
       "image": "/menu/box-large.jpeg",
@@ -144,7 +166,6 @@
         "he": "קופסת חגיגה"
       },
       "price": 130,
-      "slots": 7,
       "tagline": {
         "en": "Check 7 items",
         "ar": "اختر 7 أصناف",
@@ -156,7 +177,21 @@
         "he": "קופסת החגיגה — סמנו 7 פריטים. ארוזה אצלנו למסיבות, משרדים ותודות גדולות."
       },
       "accent": "#7a4a2e",
-      "hidden": false
+      "hidden": false,
+      "boxAllow": {
+        "categories": [
+          "cookies",
+          "mini-cakes",
+          "cinnabon",
+          "treats"
+        ],
+        "categoryMax": {
+          "cookies": 4,
+          "mini-cakes": 4,
+          "cinnabon": 1,
+          "treats": 1
+        }
+      }
     },
     {
       "image": "/menu/build-box-small.png",

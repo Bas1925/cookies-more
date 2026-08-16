@@ -251,10 +251,10 @@ const ADMIN_UI = {
     ar: "لكل صندوق، اختر الفئات المسموحة وكم قطعة من كل فئة.",
   },
   "boxPicks.sizes": { en: "How many items per box", ar: "عدد الأصناف لكل صندوق" },
-  "boxPicks.picks": { en: "Total items", ar: "مجموع الأصناف" },
+  "boxPicks.picks": { en: "Total items in this box", ar: "مجموع الأصناف في هذا الصندوق" },
   "boxPicks.picksHint": {
-    en: "The customer must fill the box with this many pieces.",
-    ar: "يجب أن يملأ الزبون الصندوق بهذا العدد من القطع.",
+    en: "This is the sum of the category numbers below — set those and the total follows. The customer must fill every category to its number.",
+    ar: "هذا مجموع أرقام الفئات بالأسفل — حدّدها وسيتبعها المجموع. على الزبون ملء كل فئة حتى رقمها.",
   },
   "boxPicks.chooseBox": { en: "Which box", ar: "أي صندوق" },
   "boxPicks.categories": { en: "Categories allowed in this box", ar: "الفئات المسموحة في هذا الصندوق" },

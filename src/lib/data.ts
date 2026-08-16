@@ -148,7 +148,7 @@ export const PROCESS_STEPS: ProcessStep[] = [
   },
   {
     id: "shape",
-    title: { en: "Shape", ar: "التشكיל", he: "עיצוב" },
+    title: { en: "Shape", ar: "التشكيل", he: "עיצוב" },
     text: {
       en: "Dough is scooped generously and rested overnight so the flavors deepen before it ever hits the oven.",
       ar: "تُغرف العجينة بسخاء وتُترك ليلة كاملة لتتعمق النكهات قبل الخبز.",
@@ -188,3 +188,8 @@ export const NAV_LINKS: { key: "menu" | "buildBox"; href: string }[] = [
   { key: "menu", href: "#shop-cookies" },
   { key: "buildBox", href: "#build" },
 ];
+
+/** Root-relative hashes so server and client markup stay identical. */
+export function shopSectionHref(href: string) {
+  return href.startsWith("#") ? `/${href}` : href;
+}

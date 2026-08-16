@@ -79,14 +79,21 @@ export function readyBoxCategoryRules(box: Product): Array<{
     }));
 }
 
-/** How many pieces from this category one ready-made box may hold. */
+/** A category the admin allowed but never numbered still holds one piece. */
+const DEFAULT_CATEGORY_MAX = 1;
+
+/**
+ * How many pieces from this category one ready-made box may hold. This is the
+ * box's defining setting: the sizes add up to the box's total, so "Small Box"
+ * means 2 cookies + 2 mini cakes + 1 treat rather than "any 3 items".
+ */
 export function readyBoxCategoryMax(box: Product, categoryId: string): number {
   if (!isBoxCategoryAllowed(box, categoryId)) return 0;
   const override = box.boxAllow?.categoryMax?.[categoryId];
   if (typeof override === "number" && override >= 0) {
     return Math.min(99, Math.floor(override));
   }
-  return readyBoxPicks(box);
+  return DEFAULT_CATEGORY_MAX;
 }
 
 /** Whether this product is offered in the box. Quantity is limited by the category. */
@@ -114,21 +121,22 @@ export function boxCapacity(boxId: string): number {
   return getProduct(boxId)?.slots ?? 6;
 }
 
-const READY_BOX_PICKS: Record<string, number> = {
-  "box-small": 3,
-  "box-medium": 5,
-  "box-large": 7,
-};
-
 /** Shop boxes the kitchen packs — not the fill-your-own sizes. */
 export function isReadyMadeBox(product: Product | undefined): boolean {
   return Boolean(product && product.category === "boxes" && !product.fillable);
 }
 
-/** How many flavors a ready-made box lets the customer check. */
+/**
+ * How many pieces a ready-made box holds — the sum of what each category is
+ * allowed to contribute. There is no separate total to keep in sync: change a
+ * category's number in admin and the box size follows.
+ */
 export function readyBoxPicks(product: Product): number {
-  if (product.slots && product.slots > 0) return product.slots;
-  return READY_BOX_PICKS[product.id] ?? 0;
+  if (!isReadyMadeBox(product)) return 0;
+  return readyBoxCategoryRules(product).reduce(
+    (sum, rule) => sum + rule.max,
+    0,
+  );
 }
 
 export function isCustomizableReadyBox(product: Product | undefined): boolean {

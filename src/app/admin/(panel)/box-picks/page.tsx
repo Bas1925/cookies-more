@@ -5,6 +5,7 @@ import type { Catalog, Product, ReadyBoxAllow } from "@/lib/types";
 import {
   isBoxCategoryAllowed,
   readyBoxCategoryMax,
+  readyBoxPicks,
   readyBoxProductMax,
 } from "@/lib/data";
 import { useAdminLanguage } from "@/lib/admin-language-context";
@@ -267,21 +268,12 @@ export default function AdminBoxPicksPage() {
             <h2 className="font-display text-xl font-semibold">
               {box.name[lang] || box.name.en}
             </h2>
-            <label className="block text-sm font-semibold">
-              {t("boxPicks.picks")}
-              <input
-                type="number"
-                min={1}
-                max={99}
-                value={box.slots ?? 3}
-                onChange={(e) =>
-                  updateBox(box.id, {
-                    slots: Math.max(1, Number(e.target.value) || 1),
-                  })
-                }
-                className="mt-1 block min-h-12 w-full max-w-xs rounded-xl border-2 border-[#964534]/15 bg-[#f3e6d4]/40 px-3 py-2 text-base outline-none focus:border-[#964534]"
-              />
-            </label>
+            {/* The total is the sum of the category numbers below, so there is
+                nothing to keep in sync by hand. */}
+            <p className="text-base font-semibold">
+              {t("boxPicks.picks")}:{" "}
+              <span className="text-[#964534]">{readyBoxPicks(box)}</span>
+            </p>
             <p className="text-sm text-[#4a2218]/60">{t("boxPicks.picksHint")}</p>
           </section>
 

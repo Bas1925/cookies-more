@@ -196,7 +196,7 @@ export default function BuildABox() {
 
       <div className="mx-auto w-full max-w-7xl px-5 md:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <span className="text-sm font-bold uppercase tracking-[0.2em] text-caramel">
+          <span className="text-sm font-bold uppercase tracking-[0.2em] text-cream">
             {t("box.eyebrow")}
           </span>
           <AnimatedHeading className="mt-2 font-display text-4xl font-semibold leading-tight sm:text-5xl md:text-6xl">
@@ -216,12 +216,20 @@ export default function BuildABox() {
               type="button"
               onClick={() => selectBox(option.id)}
               aria-pressed={box?.id === option.id}
-              className={`flex min-w-0 flex-col items-center rounded-[1.5rem] border-2 p-2.5 transition-colors sm:p-4 ${
+              className={`relative flex min-w-0 flex-col items-center rounded-[1.5rem] border-2 p-2.5 transition-all duration-300 sm:p-4 ${
                 box?.id === option.id
-                  ? "border-caramel bg-cream/12"
-                  : "border-cream/15 bg-cream/5 hover:border-cream/35"
+                  ? "-translate-y-1 border-cream bg-cream/20 shadow-xl shadow-chocolate/40 ring-2 ring-cream/25 sm:ring-4"
+                  : "border-cream/15 bg-cream/5 opacity-70 hover:-translate-y-0.5 hover:border-cream/40 hover:opacity-100"
               }`}
             >
+              {box?.id === option.id && (
+                <span
+                  aria-hidden="true"
+                  className="absolute end-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-cream text-brick shadow-md"
+                >
+                  <Check className="h-4 w-4" strokeWidth={3} />
+                </span>
+              )}
               <div aria-hidden="true" className="mb-3 w-full">
                 <ProductThumb
                   product={option}

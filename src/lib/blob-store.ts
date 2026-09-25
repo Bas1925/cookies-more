@@ -10,8 +10,6 @@ import { getStore, type Store } from "@netlify/blobs";
  *
  * Returns null when blobs are unavailable — callers must handle that branch.
  */
-const cache = new Map<string, Store | null>();
-
 function blobsAvailable() {
   return Boolean(process.env.NETLIFY_BLOBS_CONTEXT || process.env.NETLIFY);
 }
@@ -58,21 +56,21 @@ export function requestDeadline(budgetMs = REQUEST_BUDGET_MS) {
   };
 }
 
+/**
+ * Built fresh on every call — never cache the Store. It captures the access
+ * token of the request that created it, and a warm function outlives that
+ * token: on Sep 24 the admin's poll kept one instance alive for over an hour,
+ * its cached store's token expired ("Failed to decode token: Token expired"),
+ * and every save and page failed until the instance was recycled.
+ * getStore() is cheap; it only reads the current request's context.
+ */
 export function tryGetStore(name: string): Store | null {
-  const cached = cache.get(name);
-  if (cached !== undefined) return cached;
-
-  let store: Store | null = null;
-  if (blobsAvailable()) {
-    try {
-      // Strong consistency: an admin who just saved must see their own write
-      // on the next request, and a placed order must never read back stale.
-      store = getStore({ name, consistency: "strong" });
-    } catch {
-      store = null;
-    }
+  if (!blobsAvailable()) return null;
+  try {
+    // Strong consistency: an admin who just saved must see their own write
+    // on the next request, and a placed order must never read back stale.
+    return getStore({ name, consistency: "strong" });
+  } catch {
+    return null;
   }
-
-  cache.set(name, store);
-  return store;
 }

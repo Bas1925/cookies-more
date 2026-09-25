@@ -46,6 +46,11 @@ export default function AdminLoginPage() {
         lang === "ar" ? "font-arabic" : ""
       }`}
     >
+      {/* The page base is cream, which showed around the red backdrop on
+          phones: in the iOS overscroll bounce and while the keyboard resizes
+          the viewport. Painting the base red for this page only keeps the
+          screen red edge to edge; it unmounts with the page. */}
+      <style>{`html,body{background-color:#964534}`}</style>
       <form
         onSubmit={(e) => void onSubmit(e)}
         className="w-full max-w-sm rounded-3xl bg-[#f3e6d4] p-6 shadow-2xl sm:p-8"

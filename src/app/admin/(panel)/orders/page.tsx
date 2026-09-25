@@ -1,6 +1,7 @@
 import { readOrdersFile, summarizeOrders } from "@/lib/orders-fs";
 import { readCatalogFile } from "@/lib/catalog-fs";
 import { formatPrice } from "@/lib/data";
+import { requestDeadline } from "@/lib/blob-store";
 import { getAdminTranslator } from "@/lib/admin-language";
 import OrderStatusControl from "@/components/admin/OrderStatusControl";
 import DeleteOrderButton from "@/components/admin/DeleteOrderButton";
@@ -22,9 +23,12 @@ function formatWhen(iso: string, lang: AdminLang) {
 
 export default async function AdminOrdersPage() {
   const { lang, t } = await getAdminTranslator();
+  // Past the deadline this throws, and error.tsx shows a "busy" screen
+  // instead of Netlify's own error page.
+  const { within } = requestDeadline();
   const [file, catalog] = await Promise.all([
-    readOrdersFile(),
-    readCatalogFile(),
+    within(readOrdersFile()),
+    within(readCatalogFile()),
   ]);
   const summary = summarizeOrders(file.orders);
   const activeOrders = file.orders.filter((order) => order.status !== "completed");

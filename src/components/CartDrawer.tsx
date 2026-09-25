@@ -96,14 +96,27 @@ export default function CartDrawer() {
       checkoutKey.current = { key: newCheckoutKey(), order };
     }
     const key = checkoutKey.current.key;
-    void (async () => {
+    const send = async () => {
       try {
-        const res = await fetch("/api/orders", {
+        return await fetch("/api/orders", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ...JSON.parse(order), checkoutKey: key }),
         });
-        if (!res.ok) {
+      } catch {
+        return null;
+      }
+    };
+    void (async () => {
+      try {
+        // A busy server or dropped connection gets one quiet retry before the
+        // customer sees an error. The checkout key makes the repeat safe.
+        let res = await send();
+        if (!res || res.status >= 500) {
+          await new Promise((resolve) => window.setTimeout(resolve, 1_500));
+          res = await send();
+        }
+        if (!res?.ok) {
           setCheckout("error");
           return;
         }

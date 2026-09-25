@@ -2,18 +2,22 @@ import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { readCatalogFile, writeCatalogFile } from "@/lib/catalog-fs";
+import { isStoreBusy, requestDeadline } from "@/lib/blob-store";
 import type { Catalog } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
+
+const busy = () => NextResponse.json({ error: "busy" }, { status: 503 });
 
 export async function GET() {
   if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   try {
-    const catalog = await readCatalogFile();
+    const catalog = await requestDeadline().within(readCatalogFile());
     return NextResponse.json(catalog);
   } catch (error) {
+    if (isStoreBusy(error)) return busy();
     console.error(error);
     return NextResponse.json(
       { error: "Failed to read catalog" },
@@ -34,12 +38,11 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
+  let catalog: Catalog;
   try {
-    const catalog = await writeCatalogFile(body);
-    revalidatePath("/");
-    revalidatePath("/admin");
-    return NextResponse.json(catalog);
+    catalog = await requestDeadline().within(writeCatalogFile(body));
   } catch (error) {
+    if (isStoreBusy(error)) return busy();
     console.error(error);
     return NextResponse.json(
       {
@@ -49,4 +52,8 @@ export async function PUT(request: Request) {
       { status: 400 },
     );
   }
+
+  revalidatePath("/");
+  revalidatePath("/admin");
+  return NextResponse.json(catalog);
 }

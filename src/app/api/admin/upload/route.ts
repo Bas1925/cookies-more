@@ -3,7 +3,7 @@ import { randomBytes } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
-import { tryGetStore } from "@/lib/blob-store";
+import { isStoreBusy, requestDeadline, tryGetStore } from "@/lib/blob-store";
 
 export const dynamic = "force-dynamic";
 
@@ -53,7 +53,14 @@ export async function POST(request: Request) {
   // and are served back by app/uploads/[name]/route.ts.
   const store = tryGetStore("uploads");
   if (store) {
-    await store.set(name, bytes);
+    try {
+      await requestDeadline().within(store.set(name, bytes));
+    } catch (error) {
+      if (isStoreBusy(error)) {
+        return NextResponse.json({ error: "busy" }, { status: 503 });
+      }
+      throw error;
+    }
   } else {
     const dir = path.join(process.cwd(), "public", "uploads");
     await fs.mkdir(dir, { recursive: true });

@@ -20,6 +20,7 @@ import {
 } from "@/lib/orders-fs";
 import { sendOrderPush } from "@/lib/push";
 import { readCatalogFile } from "@/lib/catalog-fs";
+import { isStoreBusy, requestDeadline } from "@/lib/blob-store";
 import type { CartLine, Fulfillment, Order, OrderLine } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -134,9 +135,23 @@ function buildOrderLines(lines: CartLine[]): OrderLine[] | null {
   return result;
 }
 
+/** The customer's cart drawer retries this, and the checkout key dedupes. */
+const busy = () =>
+  NextResponse.json(
+    { error: "The shop is busy right now — please try again" },
+    { status: 503 },
+  );
+
 export async function POST(request: Request) {
+  const { within } = requestDeadline();
+
   // Ensure server catalog snapshot is fresh before pricing.
-  await readCatalogFile();
+  try {
+    await within(readCatalogFile());
+  } catch (error) {
+    if (isStoreBusy(error)) return busy();
+    throw error;
+  }
 
   let body: CheckoutBody;
   try {
@@ -152,7 +167,9 @@ export async function POST(request: Request) {
   if (checkoutKey) {
     // A retry of a checkout that already went through — the first reply was
     // lost, not the order. Answer as if it just succeeded.
-    const existing = await findOrderByCheckoutKey(checkoutKey).catch(() => null);
+    const existing = await within(findOrderByCheckoutKey(checkoutKey)).catch(
+      () => null,
+    );
     if (existing) return NextResponse.json({ ok: true, order: existing });
   }
 
@@ -210,18 +227,21 @@ export async function POST(request: Request) {
   };
 
   try {
-    await appendOrder(order);
+    // Key first: if the order write runs out of time here but lands in the
+    // background, the customer's retry still finds it instead of placing a
+    // second copy. A key pointing at an order that never landed is ignored.
     if (checkoutKey) {
-      await rememberCheckoutKey(checkoutKey, order.id).catch((error) =>
-        console.error("Order saved but checkout key was not", error),
-      );
+      await within(rememberCheckoutKey(checkoutKey, order.id));
     }
+    await within(appendOrder(order));
 
     // Awaited on purpose: the serverless function can be frozen the moment it
     // responds, so a fire-and-forget push would often never leave the box.
     // A push failure must never fail a paid-for order, hence the catch.
+    // Bounded by the same deadline: once the order is saved, running out of
+    // time costs the notification, never the customer's success screen.
     try {
-      await sendOrderPush(order);
+      await within(sendOrderPush(order));
     } catch (pushError) {
       console.error("Order saved but push notification failed", pushError);
     }
@@ -230,6 +250,7 @@ export async function POST(request: Request) {
     revalidatePath("/admin/orders");
     return NextResponse.json({ ok: true, order });
   } catch (error) {
+    if (isStoreBusy(error)) return busy();
     console.error(error);
     return NextResponse.json(
       { error: "Could not save order" },

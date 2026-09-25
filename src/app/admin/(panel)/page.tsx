@@ -2,6 +2,7 @@ import Link from "next/link";
 import { readCatalogFile } from "@/lib/catalog-fs";
 import { readOrdersFile, summarizeOrders } from "@/lib/orders-fs";
 import { formatPrice } from "@/lib/data";
+import { requestDeadline } from "@/lib/blob-store";
 import { getAdminTranslator } from "@/lib/admin-language";
 import type { AdminKey, AdminLang } from "@/lib/admin-i18n";
 import type { Order, OrderLine, Product } from "@/lib/types";
@@ -36,9 +37,12 @@ function orderStatusKey(status: Order["status"]): AdminKey {
 
 export default async function AdminDashboardPage() {
   const { lang, t } = await getAdminTranslator();
+  // Past the deadline this throws, and error.tsx shows a "busy" screen
+  // instead of Netlify's own error page.
+  const { within } = requestDeadline();
   const [catalog, ordersFile] = await Promise.all([
-    readCatalogFile(),
-    readOrdersFile(),
+    within(readCatalogFile()),
+    within(readOrdersFile()),
   ]);
   const summary = summarizeOrders(ordersFile.orders);
   const recent = ordersFile.orders.slice(0, 8);

@@ -9,8 +9,11 @@ import {
   updateOrderStatus,
 } from "@/lib/orders-fs";
 import { isOrderStatus } from "@/lib/types";
+import { isStoreBusy, requestDeadline } from "@/lib/blob-store";
 
 export const dynamic = "force-dynamic";
+
+const busy = () => NextResponse.json({ error: "busy" }, { status: 503 });
 
 /** How far back the new-order check looks. Far longer than its interval. */
 const RECENT_WINDOW_MS = 30 * 60 * 1000;
@@ -21,14 +24,18 @@ export async function GET(request: Request) {
   }
 
   try {
+    const { within } = requestDeadline();
     if (new URL(request.url).searchParams.has("recent")) {
-      return NextResponse.json({ orders: await readRecentOrders(RECENT_WINDOW_MS) });
+      return NextResponse.json({
+        orders: await within(readRecentOrders(RECENT_WINDOW_MS)),
+      });
     }
 
-    const file = await readOrdersFile();
+    const file = await within(readOrdersFile());
     const summary = summarizeOrders(file.orders);
     return NextResponse.json({ orders: file.orders, summary });
   } catch (error) {
+    if (isStoreBusy(error)) return busy();
     console.error(error);
     return NextResponse.json(
       { error: "Failed to read orders" },
@@ -54,7 +61,9 @@ export async function PATCH(request: Request) {
   }
 
   try {
-    const order = await updateOrderStatus(body.orderId, body.status);
+    const order = await requestDeadline().within(
+      updateOrderStatus(body.orderId, body.status),
+    );
     if (!order) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
@@ -62,6 +71,7 @@ export async function PATCH(request: Request) {
     revalidatePath("/admin/orders");
     return NextResponse.json({ ok: true, order });
   } catch (error) {
+    if (isStoreBusy(error)) return busy();
     console.error(error);
     return NextResponse.json(
       { error: "Could not update order status" },
@@ -87,7 +97,7 @@ export async function DELETE(request: Request) {
   }
 
   try {
-    const deleted = await deleteOrder(body.orderId);
+    const deleted = await requestDeadline().within(deleteOrder(body.orderId));
     if (!deleted) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
@@ -95,6 +105,7 @@ export async function DELETE(request: Request) {
     revalidatePath("/admin/orders");
     return NextResponse.json({ ok: true });
   } catch (error) {
+    if (isStoreBusy(error)) return busy();
     console.error(error);
     return NextResponse.json(
       { error: "Could not delete order" },

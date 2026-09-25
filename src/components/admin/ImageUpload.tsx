@@ -2,6 +2,7 @@
 
 import { useId, useState } from "react";
 import { useAdminLanguage } from "@/lib/admin-language-context";
+import { adminRequest } from "@/lib/admin-catalog-api";
 
 export default function ImageUpload({
   value,
@@ -19,21 +20,20 @@ export default function ImageUpload({
   const upload = async (file: File) => {
     setBusy(true);
     setError("");
-    try {
-      const body = new FormData();
-      body.append("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body });
-      const data = (await res.json()) as { url?: string; error?: string };
-      if (!res.ok || !data.url) {
-        setError(data.error || t("image.failed"));
-        return;
-      }
-      onChange(data.url);
-    } catch {
-      setError(t("image.failed"));
-    } finally {
-      setBusy(false);
+    const body = new FormData();
+    body.append("file", file);
+    const result = await adminRequest<{ url?: string }>("/api/admin/upload", {
+      method: "POST",
+      body,
+    });
+    if (result.ok && result.data.url) {
+      onChange(result.data.url);
+    } else if (!result.ok && result.busy) {
+      setError(t("common.serverBusy"));
+    } else {
+      setError((!result.ok && result.error) || t("image.failed"));
     }
+    setBusy(false);
   };
 
   return (

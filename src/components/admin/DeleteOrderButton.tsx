@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AlertTriangle, Trash2, X } from "lucide-react";
+import { adminRequest } from "@/lib/admin-catalog-api";
 
 interface DeleteLabels {
   title: string;
@@ -33,19 +34,20 @@ export default function DeleteOrderButton({
     setDeleting(true);
     setError(false);
 
-    try {
-      const response = await fetch("/api/admin/orders", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId }),
-      });
-      if (!response.ok) throw new Error("Delete failed");
+    const result = await adminRequest("/api/admin/orders", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ orderId }),
+    });
+    // 404 after a retry means the first attempt went through and only its
+    // reply was lost — the order is gone either way.
+    if (result.ok || result.status === 404) {
       setConfirmOpen(false);
       router.refresh();
-    } catch {
-      setError(true);
-      setDeleting(false);
+      return;
     }
+    setError(true);
+    setDeleting(false);
   };
 
   return (

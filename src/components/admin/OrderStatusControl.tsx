@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ORDER_STATUSES, type OrderStatus } from "@/lib/types";
+import { adminRequest } from "@/lib/admin-catalog-api";
 
 interface StatusLabels {
   label: string;
@@ -37,20 +38,18 @@ export default function OrderStatusControl({
     setSaving(true);
     setError(false);
 
-    try {
-      const response = await fetch("/api/admin/orders", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId, status: nextStatus }),
-      });
-      if (!response.ok) throw new Error("Status update failed");
+    const result = await adminRequest("/api/admin/orders", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ orderId, status: nextStatus }),
+    });
+    if (result.ok) {
       router.refresh();
-    } catch {
+    } else {
       setStatus(previousStatus);
       setError(true);
-    } finally {
-      setSaving(false);
     }
+    setSaving(false);
   };
 
   return (

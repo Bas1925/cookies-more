@@ -56,7 +56,10 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
 
   const refresh = useCallback(async () => {
     try {
-      const res = await fetch("/api/catalog", { cache: "no-store" });
+      // Default caching on purpose: the response says max-age=0, so the
+      // browser still asks every time, but without the no-cache request
+      // headers that would make Netlify's CDN skip its short-lived copy.
+      const res = await fetch("/api/catalog");
       if (!res.ok) return;
       const data = (await res.json()) as Catalog;
       apply(data);

@@ -9,6 +9,7 @@ import LocalizedFields, {
 } from "@/components/admin/LocalizedFields";
 import type { Catalog, Localized, Product } from "@/lib/types";
 import { useAdminLanguage } from "@/lib/admin-language-context";
+import { loadCatalog, saveCatalog } from "@/lib/admin-catalog-api";
 
 function blankProduct(id: string): Product {
   return {
@@ -34,12 +35,12 @@ export default function AdminProductEditorPage() {
 
   useEffect(() => {
     void (async () => {
-      const res = await fetch("/api/admin/catalog", { cache: "no-store" });
-      if (!res.ok) {
+      const result = await loadCatalog();
+      if (!result.ok) {
         setError(t("products.loadFailed"));
         return;
       }
-      const data = (await res.json()) as Catalog;
+      const data = result.catalog;
       setCatalog(data);
       if (isNew) {
         setProduct(blankProduct(`item-${Date.now().toString(36)}`));
@@ -86,19 +87,19 @@ export default function AdminProductEditorPage() {
       ? [...catalog.products, cleaned]
       : catalog.products.map((p) => (p.id === cleaned.id ? cleaned : p));
 
-    const res = await fetch("/api/admin/catalog", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...catalog, products }),
-    });
+    const result = await saveCatalog({ ...catalog, products });
 
-    if (!res.ok) {
-      const data = (await res.json()) as { error?: string };
-      setError(data.error || t("common.saveFailed"));
+    if (!result.ok) {
+      setError(
+        result.busy
+          ? t("common.serverBusy")
+          : result.error || t("common.saveFailed"),
+      );
       setStatus("");
       return;
     }
 
+    setCatalog(result.catalog);
     setStatus(t("common.saved"));
     // Clear it so a stale "Saved" doesn't linger while you keep editing.
     window.setTimeout(() => setStatus(""), 2500);
@@ -113,13 +114,9 @@ export default function AdminProductEditorPage() {
     const productName = product.name[lang] || product.name.en || product.id;
     if (!confirm(t("editor.deleteConfirm", { name: productName }))) return;
     const products = catalog.products.filter((p) => p.id !== product.id);
-    const res = await fetch("/api/admin/catalog", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...catalog, products }),
-    });
-    if (!res.ok) {
-      setError(t("editor.deleteFailed"));
+    const result = await saveCatalog({ ...catalog, products });
+    if (!result.ok) {
+      setError(result.busy ? t("common.serverBusy") : t("editor.deleteFailed"));
       return;
     }
     router.push("/admin/products");

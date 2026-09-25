@@ -220,7 +220,7 @@ export default function NewOrderNotifier() {
     if (checking.current) return;
     checking.current = true;
     try {
-      const response = await fetch("/api/admin/orders", {
+      const response = await fetch("/api/admin/orders?recent=1", {
         cache: "no-store",
         headers: { Accept: "application/json" },
       });
@@ -255,7 +255,12 @@ export default function NewOrderNotifier() {
 
   useEffect(() => {
     void checkForOrders();
-    const interval = window.setInterval(() => void checkForOrders(), 10_000);
+    // Push alerts announce new orders instantly, so this poll is only a
+    // fallback; at 10s it kept a request in flight almost constantly while
+    // the panel sat open. A background tab catches up on focus instead.
+    const interval = window.setInterval(() => {
+      if (document.visibilityState === "visible") void checkForOrders();
+    }, 30_000);
     const checkWhenVisible = () => {
       if (document.visibilityState === "visible") void checkForOrders();
     };

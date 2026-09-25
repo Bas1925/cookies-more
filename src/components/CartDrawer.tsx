@@ -18,6 +18,13 @@ import { formatPrice, getProduct, HERO_PRODUCT_ID, boxLinePrice } from "@/lib/da
 import { useLanguage } from "@/lib/language-context";
 import type { CartLine } from "@/lib/types";
 
+function newCheckoutKey() {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID();
+  }
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
+}
+
 type CheckoutState = "idle" | "processing" | "success" | "error";
 type CustomerFieldError = "name" | "phone" | null;
 
@@ -41,6 +48,9 @@ export default function CartDrawer() {
   const [customerFieldError, setCustomerFieldError] =
     useState<CustomerFieldError>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
+  // One key per distinct order. Retrying the same order after an error reuses
+  // it, so the server returns the order it already saved instead of a copy.
+  const checkoutKey = useRef<{ key: string; order: string } | null>(null);
 
   // Close and reset transient checkout UI so the next open is fresh.
   const handleClose = useCallback(() => {
@@ -76,23 +86,29 @@ export default function CartDrawer() {
     }
     setCustomerFieldError(null);
     setCheckout("processing");
+    const order = JSON.stringify({
+      lines,
+      fulfillment,
+      customerName: cleanName,
+      phone: cleanPhone,
+    });
+    if (checkoutKey.current?.order !== order) {
+      checkoutKey.current = { key: newCheckoutKey(), order };
+    }
+    const key = checkoutKey.current.key;
     void (async () => {
       try {
         const res = await fetch("/api/orders", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            lines,
-            fulfillment,
-            customerName: cleanName,
-            phone: cleanPhone,
-          }),
+          body: JSON.stringify({ ...JSON.parse(order), checkoutKey: key }),
         });
         if (!res.ok) {
           setCheckout("error");
           return;
         }
         setCheckout("success");
+        checkoutKey.current = null;
         window.setTimeout(() => {
           clearCart();
           setCustomerName("");

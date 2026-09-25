@@ -4,6 +4,7 @@ import { isAdminAuthenticated } from "@/lib/admin-auth";
 import {
   deleteOrder,
   readOrdersFile,
+  readRecentOrders,
   summarizeOrders,
   updateOrderStatus,
 } from "@/lib/orders-fs";
@@ -11,12 +12,19 @@ import { isOrderStatus } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+/** How far back the new-order check looks. Far longer than its interval. */
+const RECENT_WINDOW_MS = 30 * 60 * 1000;
+
+export async function GET(request: Request) {
   if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
+    if (new URL(request.url).searchParams.has("recent")) {
+      return NextResponse.json({ orders: await readRecentOrders(RECENT_WINDOW_MS) });
+    }
+
     const file = await readOrdersFile();
     const summary = summarizeOrders(file.orders);
     return NextResponse.json({ orders: file.orders, summary });

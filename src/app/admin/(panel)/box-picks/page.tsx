@@ -9,6 +9,7 @@ import {
   readyBoxProductMax,
 } from "@/lib/data";
 import { useAdminLanguage } from "@/lib/admin-language-context";
+import { loadCatalog, saveCatalog } from "@/lib/admin-catalog-api";
 
 function isPickableItem(product: Product) {
   return !product.fillable && product.category !== "boxes";
@@ -49,12 +50,12 @@ export default function AdminBoxPicksPage() {
 
   useEffect(() => {
     void (async () => {
-      const res = await fetch("/api/admin/catalog", { cache: "no-store" });
-      if (!res.ok) {
+      const result = await loadCatalog();
+      if (!result.ok) {
         setError(t("products.loadFailed"));
         return;
       }
-      const data = (await res.json()) as Catalog;
+      const data = result.catalog;
       setCatalog(data);
       setBoxId((current) => {
         if (current && data.products.some((product) => product.id === current)) {
@@ -116,18 +117,17 @@ export default function AdminBoxPicksPage() {
             : undefined,
       })),
     };
-    const res = await fetch("/api/admin/catalog", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) {
-      const data = (await res.json()) as { error?: string };
-      setError(data.error || t("common.saveFailed"));
+    const result = await saveCatalog(payload);
+    if (!result.ok) {
+      setError(
+        result.busy
+          ? t("common.serverBusy")
+          : result.error || t("common.saveFailed"),
+      );
       setStatus("");
       return;
     }
-    setCatalog(await res.json());
+    setCatalog(result.catalog);
     setStatus(t("common.saved"));
   };
 

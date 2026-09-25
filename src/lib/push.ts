@@ -53,7 +53,9 @@ async function broadcast(payload: PushPayload) {
             keys: subscription.keys,
           },
           body,
-          { TTL: 60 * 60 * 12 },
+          // A push service that hangs must not hold the customer's checkout
+          // open until Netlify kills it — the order is already saved.
+          { TTL: 60 * 60 * 12, timeout: 5_000 },
         );
         sent += 1;
       } catch (error) {

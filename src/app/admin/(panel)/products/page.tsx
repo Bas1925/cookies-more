@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { Catalog, Product } from "@/lib/types";
 import { formatPrice } from "@/lib/data";
 import { useAdminLanguage } from "@/lib/admin-language-context";
+import { loadCatalog } from "@/lib/admin-catalog-api";
 
 export default function AdminProductsPage() {
   const { lang, t } = useAdminLanguage();
@@ -15,12 +16,12 @@ export default function AdminProductsPage() {
 
   useEffect(() => {
     void (async () => {
-      const res = await fetch("/api/admin/catalog", { cache: "no-store" });
-      if (!res.ok) {
+      const result = await loadCatalog();
+      if (!result.ok) {
         setError(t("products.loadFailed"));
         return;
       }
-      setCatalog(await res.json());
+      setCatalog(result.catalog);
     })();
   }, [t]);
 

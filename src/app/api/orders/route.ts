@@ -13,7 +13,11 @@ import {
   readyBoxCategoryMax,
   readyBoxProductMax,
 } from "@/lib/data";
-import { appendOrder } from "@/lib/orders-fs";
+import {
+  appendOrder,
+  findOrderByCheckoutKey,
+  rememberCheckoutKey,
+} from "@/lib/orders-fs";
 import { sendOrderPush } from "@/lib/push";
 import { readCatalogFile } from "@/lib/catalog-fs";
 import type { CartLine, Fulfillment, Order, OrderLine } from "@/lib/types";
@@ -25,7 +29,10 @@ interface CheckoutBody {
   fulfillment?: Fulfillment;
   customerName?: string;
   phone?: string;
+  checkoutKey?: string;
 }
+
+const CHECKOUT_KEY = /^[A-Za-z0-9-]{8,64}$/;
 
 function buildOrderLines(lines: CartLine[]): OrderLine[] | null {
   const result: OrderLine[] = [];
@@ -138,6 +145,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
+  const checkoutKey =
+    typeof body.checkoutKey === "string" && CHECKOUT_KEY.test(body.checkoutKey)
+      ? body.checkoutKey
+      : null;
+  if (checkoutKey) {
+    // A retry of a checkout that already went through — the first reply was
+    // lost, not the order. Answer as if it just succeeded.
+    const existing = await findOrderByCheckoutKey(checkoutKey).catch(() => null);
+    if (existing) return NextResponse.json({ ok: true, order: existing });
+  }
+
   const lines = Array.isArray(body.lines) ? body.lines : [];
   if (lines.length === 0) {
     return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
@@ -193,6 +211,11 @@ export async function POST(request: Request) {
 
   try {
     await appendOrder(order);
+    if (checkoutKey) {
+      await rememberCheckoutKey(checkoutKey, order.id).catch((error) =>
+        console.error("Order saved but checkout key was not", error),
+      );
+    }
 
     // Awaited on purpose: the serverless function can be frozen the moment it
     // responds, so a fire-and-forget push would often never leave the box.

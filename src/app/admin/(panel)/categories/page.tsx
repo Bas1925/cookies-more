@@ -13,6 +13,7 @@ import LocalizedFields, {
 } from "@/components/admin/LocalizedFields";
 import type { Catalog, Category, Localized } from "@/lib/types";
 import { useAdminLanguage } from "@/lib/admin-language-context";
+import { loadCatalog, saveCatalog } from "@/lib/admin-catalog-api";
 
 function hasName(name: Localized) {
   return Boolean(name.en.trim() || name.ar.trim() || name.he.trim());
@@ -60,12 +61,12 @@ export default function AdminCategoriesPage() {
 
   useEffect(() => {
     void (async () => {
-      const res = await fetch("/api/admin/catalog", { cache: "no-store" });
-      if (!res.ok) {
+      const result = await loadCatalog();
+      if (!result.ok) {
         setError(t("products.loadFailed"));
         return;
       }
-      setCatalog(await res.json());
+      setCatalog(result.catalog);
     })();
   }, [t]);
 
@@ -80,18 +81,17 @@ export default function AdminCategoriesPage() {
     if (!catalog) return;
     setStatus(t("common.saving"));
     setError("");
-    const res = await fetch("/api/admin/catalog", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(catalog),
-    });
-    if (!res.ok) {
-      const data = (await res.json()) as { error?: string };
-      setError(data.error || t("common.saveFailed"));
+    const result = await saveCatalog(catalog);
+    if (!result.ok) {
+      setError(
+        result.busy
+          ? t("common.serverBusy")
+          : result.error || t("common.saveFailed"),
+      );
       setStatus("");
       return;
     }
-    setCatalog(await res.json());
+    setCatalog(result.catalog);
     setStatus(t("common.saved"));
   };
 

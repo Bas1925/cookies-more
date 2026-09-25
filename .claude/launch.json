@@ -7,6 +7,12 @@
       "runtimeArgs": ["run", "dev"],
       "port": 3000,
       "autoPort": true
+    },
+    {
+      "name": "netlify-dev",
+      "runtimeExecutable": "netlify",
+      "runtimeArgs": ["dev", "--port", "8888", "--target-port", "3010", "--command", "npx next dev -p 3010", "--no-open"],
+      "port": 8888
     }
   ]
 }

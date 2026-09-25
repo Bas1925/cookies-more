@@ -38,6 +38,10 @@ const ADMIN_UI = {
   "common.description": { en: "Description", ar: "الوصف" },
   "common.id": { en: "Id", ar: "المعرّف" },
   "common.saveFailed": { en: "Save failed", ar: "فشل الحفظ" },
+  "common.serverBusy": {
+    en: "The server is busy right now. Your changes are still here — tap Save again in a moment.",
+    ar: "الخادم مشغول الآن. تعديلاتك ما زالت هنا — اضغط حفظ مرة أخرى بعد لحظة.",
+  },
   "shell.skip": { en: "Skip to content", ar: "انتقل إلى المحتوى" },
   "shell.admin": { en: "Admin", ar: "الإدارة" },
   "shell.dashboard": { en: "Dashboard", ar: "لوحة التحكم" },

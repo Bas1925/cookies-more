@@ -75,17 +75,88 @@ async function writeOrdersToDisk(file: OrdersFile): Promise<OrdersFile> {
  * of the orders.
  * ---------------------------------------------------------------- */
 
+/**
+ * Blob reads in flight at once. Firing one request per order all together
+ * worked with a handful of orders, but a few hundred at once is what gets
+ * throttled and pushes the page past Netlify's function time limit.
+ */
+const READ_CONCURRENCY = 16;
+
+async function loadOrders(keys: string[]): Promise<Order[]> {
+  const store = tryGetStore(STORE_NAME);
+  if (!store) return [];
+  const loaded: unknown[] = [];
+  for (let i = 0; i < keys.length; i += READ_CONCURRENCY) {
+    const batch = keys.slice(i, i + READ_CONCURRENCY);
+    loaded.push(
+      ...(await Promise.all(
+        batch.map((key) => store.get(key, { type: "json" }).catch(() => null)),
+      )),
+    );
+  }
+  return newestFirst(loaded.filter(isOrder).map(withStatus));
+}
+
 export async function readOrdersFile(): Promise<OrdersFile> {
   const store = tryGetStore(STORE_NAME);
   if (!store) return readOrdersFromDisk();
 
   const { blobs } = await store.list();
-  const loaded = await Promise.all(
-    blobs.map((blob) =>
-      store.get(blob.key, { type: "json" }).catch(() => null),
-    ),
-  );
-  return { orders: newestFirst(loaded.filter(isOrder).map(withStatus)) };
+  return { orders: await loadOrders(blobs.map((blob) => blob.key)) };
+}
+
+/** Order ids are `ord_<base36 ms>_<hex>`, so the key alone dates the order. */
+function orderTimeFromKey(key: string): number | null {
+  const match = /^ord_([0-9a-z]+)_/.exec(key);
+  if (!match) return null;
+  const ms = parseInt(match[1], 36);
+  return Number.isFinite(ms) ? ms : null;
+}
+
+/**
+ * Orders placed in the last `withinMs`. The admin's new-order check runs every
+ * few seconds forever, so it lists keys (one request) and downloads only the
+ * recent few, instead of every order the shop has ever taken.
+ */
+export async function readRecentOrders(withinMs: number): Promise<Order[]> {
+  const store = tryGetStore(STORE_NAME);
+  const since = Date.now() - withinMs;
+  if (!store) {
+    const file = await readOrdersFromDisk();
+    return file.orders.filter((o) => new Date(o.createdAt).getTime() >= since);
+  }
+
+  const { blobs } = await store.list();
+  const recent = blobs
+    .map((blob) => blob.key)
+    .filter((key) => (orderTimeFromKey(key) ?? 0) >= since);
+  return loadOrders(recent);
+}
+
+/* ---------------------------------------------------------------- *
+ * Checkout keys — so a customer who retries after a network error
+ * does not place the same order twice. The browser sends one key per
+ * attempt; the first order saved under it is returned on any repeat.
+ * ---------------------------------------------------------------- */
+
+const CHECKOUTS_STORE = "checkouts";
+
+export async function findOrderByCheckoutKey(key: string): Promise<Order | null> {
+  const checkouts = tryGetStore(CHECKOUTS_STORE);
+  const store = tryGetStore(STORE_NAME);
+  if (!checkouts || !store) return null;
+  const record = (await checkouts.get(key, { type: "json" })) as
+    | { orderId?: string }
+    | null;
+  if (!record?.orderId) return null;
+  const order = await store.get(record.orderId, { type: "json" });
+  return isOrder(order) ? withStatus(order) : null;
+}
+
+export async function rememberCheckoutKey(key: string, orderId: string) {
+  const checkouts = tryGetStore(CHECKOUTS_STORE);
+  if (!checkouts) return;
+  await checkouts.setJSON(key, { orderId, at: new Date().toISOString() });
 }
 
 export async function appendOrder(order: Order): Promise<Order> {
